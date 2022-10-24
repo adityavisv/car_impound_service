@@ -96,6 +96,35 @@ paths:
           description: Invalid vehicle ID
         '404':
           description: Vehicle not found
+  /api/v1/zone:
+    get:
+      tags:
+        - zone
+      summary: Retrieves all parking slots in a zone
+      operationId: retrieveZone
+      parameters:
+        - name: zone
+          in: query
+          description: Label of the zone to retrieve
+          required: false
+          schema:
+            type: string
+            default: 'A'
+        - name: occupiedStatus
+          in: query
+          description: Occupancy Status of parking spots to filter by
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpotList'
+        '400':
+          description: Invalid Zone Label
   /api/v1/search:
     get:
       tags:
@@ -123,6 +152,29 @@ paths:
 
 components:
   schemas:
+    ParkingSpot:
+      type: object
+      properties:
+        id:
+          type: integer
+        zoneLabel:
+          type: string
+        slotNumber:
+          type: integer
+        occupancyStatus:
+          type: string
+          enum: ["Occupied", "Available"]
+        occupiedVehicle:
+          $ref: '#/components/schemas/ParkingSpot'
+
+    ParkingSpotList:
+      type: object
+      properties:
+        parkingSpots:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParkingSpot'
+
     Vehicles:
       type: object
       properties:
@@ -130,6 +182,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vehicle'
+
     Owner:
       type: object
       properties:
