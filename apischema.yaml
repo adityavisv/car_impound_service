@@ -125,6 +125,90 @@ paths:
                 $ref: '#/components/schemas/ParkingSpotList'
         '400':
           description: Invalid Zone Label
+  /api/v1/zone/parkingSpot:
+    get:
+      tags:
+        - vehicle
+      summary: Retrieves single parking spot details
+      description: Fetches all information about a parking spot based on zone and slot number
+      parameters:
+        - name: zone
+          in: query
+          description: Zone of the parking spot to look up
+          required: true
+          schema:
+            type: string
+        - name: slotNumber
+          in: query
+          description: Slot Number of the parking spot to look up.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpot'
+  /api/v1/zone/summary:
+    get:
+      tags:
+        - vehicle
+      summary: Retrieves summaries of zone(s) based on filters (if applicable)
+      parameters:
+        - name: zone
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingZoneListSummary'
+  /api/v1/zone/assign:
+    put:
+      tags:
+        - vehicle
+      summary: Assigns a car to a parking slot
+      parameters:
+        - name: zone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: slotNumber
+          in: query
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Vehicle Data which is to be assigned
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehiclePost'
+        required: true
+  /api/v1/zone/release:
+    put:
+      tags:
+        - vehicle
+      summary: Releases car from a given parking spot
+      parameters:
+        - name: zone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: slotNumber
+          in: query
+          required: true
+          schema:
+            type: integer
+
   /api/v1/search:
     get:
       tags:
@@ -152,6 +236,24 @@ paths:
 
 components:
   schemas:
+    ParkingZoneSummary:
+      type: object
+      properties:
+        zoneLabel:
+          type: string
+        totalCapacity:
+          type: integer
+        availableCount:
+          type: integer
+        occupiedCount:
+          type: integer
+    ParkingZoneListSummary:
+      type: object
+      properties:
+        zoneSummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParkingZoneSummary'
     ParkingSpot:
       type: object
       properties:

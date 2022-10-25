@@ -1,15 +1,12 @@
 package com.teksecure.service.impoundsrv.controller;
 
 import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
-import com.teksecure.service.impoundsrv.model.payload.ParkingSpotListPayload;
+import com.teksecure.service.impoundsrv.model.payload.*;
 import com.teksecure.service.impoundsrv.service.ParkingZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -44,6 +41,40 @@ public class ZoneController {
         }
         else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value="/summary")
+    public ResponseEntity<ParkingZoneListSummary> retrieveParkingZoneSummaries(
+            @RequestParam(required = false) Optional<String> zone) {
+        ParkingZoneListSummary summaries = parkingZoneService.retrieveParkingZoneSummaries(
+                zone.isPresent() ? zone.get() : null);
+        return new ResponseEntity<>(summaries, HttpStatus.OK);
+    }
+
+    @PutMapping(value="/assign")
+    public ResponseEntity<ParkingSpotEntity> assignCarToParking(
+            @RequestParam String zone,
+            @RequestParam Integer slotNumber,
+            @RequestBody VehicleCreatePayload payload) {
+        ParkingSpotEntity savedEntity = parkingZoneService.assignCarToParkingSpot(zone, slotNumber, payload);
+        return new ResponseEntity<>(savedEntity, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/release")
+    public ResponseEntity<GenericResponse> releaseCar(
+            @RequestParam String zone,
+            @RequestParam Integer slotNumber) {
+        Integer updateRetCode = parkingZoneService.releaseCarFromParking(zone, slotNumber);
+        if (updateRetCode == 0) {
+            return new ResponseEntity<>(
+                    new GenericResponse("Successfully released", 201),
+                    HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(
+                    new GenericResponse("Invalid Parking Slot Number", 400)
+            , HttpStatus.BAD_REQUEST);
         }
     }
 }
