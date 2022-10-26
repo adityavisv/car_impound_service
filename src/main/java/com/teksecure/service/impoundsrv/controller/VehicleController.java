@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/api/v1/vehicle")
@@ -42,5 +42,22 @@ public class VehicleController {
     public ResponseEntity<VehicleEntity> updateVehicle(@RequestBody VehicleUpdatePayload payload) {
         VehicleEntity updatedVehicle = service.updateVehicle(payload);
         return new ResponseEntity<>(updatedVehicle, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path="/search")
+    public ResponseEntity<VehicleListPayload> searchVehicles(
+            @RequestParam(required = false) String zone,
+            @RequestParam(required = false) String make,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) String ownerFirstName,
+            @RequestParam(required = false) String ownerLastName) {
+
+        List<VehicleEntity> matchingResults = service.searchVehicles(
+                make, model, zone, ownerFirstName, ownerLastName);
+        return new ResponseEntity<>(
+                new VehicleListPayload(matchingResults),
+                HttpStatus.OK
+        );
+
     }
 }

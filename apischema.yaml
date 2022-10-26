@@ -209,21 +209,44 @@ paths:
           schema:
             type: integer
 
-  /api/v1/search:
+  /api/v1/vehicle/search:
     get:
       tags:
         - vehicle
       summary: Search vehicle from impound lot database
-      description: Searches all vehicle data throught the database based on a search keyword.
+      description: Searches all vehicle data through the database based on parameters.
       operationId: searchVehicle
       parameters:
-        - name: keyword
+        - name: make
           in: query
-          description: Key phrase to search by
-          required: true
+          description: Make of the vehicle
+          required: false
           schema:
             type: string
-            default: available
+        - name: model
+          in: query
+          description: Model of the vehicle
+          required: false
+          schema:
+            type: string
+        - name: zone
+          in: query
+          description: Zone to search by
+          required: false
+          schema:
+            type: string
+        - name: ownerFirstName
+          in: query
+          description: First name of the owner to search by.
+          required: false
+          schema:
+            type: string
+        - name: ownerLastName
+          in: query
+          description: Last name of the owner to search by.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation

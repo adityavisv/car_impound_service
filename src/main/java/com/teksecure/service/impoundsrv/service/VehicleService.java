@@ -8,6 +8,9 @@ import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class VehicleService  {
 
@@ -44,5 +47,35 @@ public class VehicleService  {
         else {
             return null;
         }
+    }
+
+    public List<VehicleEntity> searchVehicles(
+            String make,
+            String model,
+            String zone,
+            String ownerFName,
+            String ownerLName
+    ) {
+        List<VehicleEntity> allVehicles = vehicleRepository.fetchAllVehicles();
+        if (make != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getMake().equals(make)).collect(Collectors.toList());
+
+        if (model != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getModel().equals(model)).collect(Collectors.toList());
+
+        if (zone != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getParkingSlot().startsWith(zone)).collect(Collectors.toList());
+        if (ownerFName != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getOwner().getFirstName().equals(ownerFName))
+                    .collect(Collectors.toList());
+        if (ownerLName != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getOwner().getLastName().equals(ownerLName))
+                    .collect(Collectors.toList());
+        return allVehicles;
     }
 }
