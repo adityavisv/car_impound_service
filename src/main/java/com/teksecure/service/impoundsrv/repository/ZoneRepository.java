@@ -4,9 +4,11 @@ import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ZoneRepository extends CrudRepository<ParkingSpotEntity, Integer> {
 
     @Query(value = "SELECT * FROM PARKING_ZONE P WHERE P.ZONE_LABEL = :zone", nativeQuery = true)

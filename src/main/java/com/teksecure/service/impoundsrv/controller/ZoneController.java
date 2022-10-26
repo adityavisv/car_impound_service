@@ -6,10 +6,12 @@ import com.teksecure.service.impoundsrv.service.ParkingZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(path = "/api/v1/zone")
 public class ZoneController {
@@ -21,6 +23,7 @@ public class ZoneController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ParkingSpotListPayload> retrieveZone(
             @RequestParam(required = false) Optional<String> zone,
             @RequestParam(required = false) Optional<String> occupiedStatus) {
@@ -31,6 +34,7 @@ public class ZoneController {
         return new ResponseEntity<>(responsePayload, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping(value="/parkingSpot")
     public ResponseEntity<ParkingSpotEntity> retrieveParkingSpotBySlotNum(@RequestParam String zone,
                                                                           @RequestParam Integer slotNumber) {
@@ -44,6 +48,7 @@ public class ZoneController {
         }
     }
 
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping(value="/summary")
     public ResponseEntity<ParkingZoneListSummary> retrieveParkingZoneSummaries(
             @RequestParam(required = false) Optional<String> zone) {
@@ -52,6 +57,7 @@ public class ZoneController {
         return new ResponseEntity<>(summaries, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping(value="/assign")
     public ResponseEntity<ParkingSpotEntity> assignCarToParking(
             @RequestParam String zone,
@@ -61,6 +67,7 @@ public class ZoneController {
         return new ResponseEntity<>(savedEntity, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping(value = "/release")
     public ResponseEntity<GenericResponse> releaseCar(
             @RequestParam String zone,

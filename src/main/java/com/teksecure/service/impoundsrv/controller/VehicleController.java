@@ -8,6 +8,7 @@ import com.teksecure.service.impoundsrv.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class VehicleController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<VehicleEntity> retrieveVehicle(@RequestParam String vehicleId) {
         VehicleEntity matchVehicle = service.retrieveVehicle(vehicleId);
         if (matchVehicle != null)
@@ -33,18 +35,21 @@ public class VehicleController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<VehicleEntity> addNewVehicle(@RequestBody VehicleCreatePayload payload) {
         VehicleEntity savedVehicle = service.insertVehicle(payload);
         return new ResponseEntity<>(savedVehicle, HttpStatus.CREATED);
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<VehicleEntity> updateVehicle(@RequestBody VehicleUpdatePayload payload) {
         VehicleEntity updatedVehicle = service.updateVehicle(payload);
         return new ResponseEntity<>(updatedVehicle, HttpStatus.CREATED);
     }
 
     @GetMapping(path="/search")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<VehicleListPayload> searchVehicles(
             @RequestParam(required = false) String zone,
             @RequestParam(required = false) String make,

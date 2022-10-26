@@ -40,16 +40,22 @@ CREATE TABLE `parking_zone` (
                                 CONSTRAINT `vehicle_id_fk` FOREIGN KEY (`VEHICLE_ID`) REFERENCES `vehicles` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `users` (
-                         `username` varchar(50) NOT NULL,
-                         `password` varchar(100) NOT NULL,
-                         `enabled` tinyint NOT NULL DEFAULT '1',
-                         PRIMARY KEY (`username`)
+CREATE TABLE `user_roles` (
+                              `user_id` bigint NOT NULL,
+                              `role_id` int NOT NULL,
+                              PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `authorities` (
-                               `username` varchar(50) NOT NULL,
-                               `authority` varchar(50) NOT NULL,
-                               UNIQUE KEY `ix_auth_username` (`username`,`authority`),
-                               CONSTRAINT `authorities_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ;
+CREATE TABLE `roles` (
+                         `id` int NOT NULL AUTO_INCREMENT,
+                         `name` varchar(20) DEFAULT NULL,
+                         PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `users` (
+                         `id` bigint NOT NULL AUTO_INCREMENT,
+                         `email` varchar(50) DEFAULT NULL,
+                         `password` varchar(120) DEFAULT NULL,
+                         `username` varchar(20) DEFAULT NULL,
+                         PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
