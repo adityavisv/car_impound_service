@@ -1,4 +1,4 @@
-package com.teksecure.service.impoundsrv.model.payload;
+package com.teksecure.service.impoundsrv.model.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

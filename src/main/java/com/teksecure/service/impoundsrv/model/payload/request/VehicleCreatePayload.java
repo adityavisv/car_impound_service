@@ -1,4 +1,4 @@
-package com.teksecure.service.impoundsrv.model.payload;
+package com.teksecure.service.impoundsrv.model.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.teksecure.service.impoundsrv.model.payload;
+package com.teksecure.service.impoundsrv.model.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,9 +11,6 @@ import java.util.Date;
 
 @Getter @Setter @NoArgsConstructor
 public class VehicleUpdatePayload {
-
-    @JsonProperty(value = "id", required = true)
-    private Integer id;
 
     @JsonProperty(value = "make")
     private String make;

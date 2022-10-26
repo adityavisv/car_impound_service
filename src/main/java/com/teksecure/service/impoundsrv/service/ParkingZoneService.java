@@ -2,7 +2,10 @@ package com.teksecure.service.impoundsrv.service;
 
 import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
-import com.teksecure.service.impoundsrv.model.payload.*;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
+import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
+import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneSummary;
 import com.teksecure.service.impoundsrv.repository.ZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

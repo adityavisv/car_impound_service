@@ -1,7 +1,7 @@
 package com.teksecure.service.impoundsrv.model.entity;
 
-import com.teksecure.service.impoundsrv.model.payload.VehicleCreatePayload;
-import com.teksecure.service.impoundsrv.model.payload.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,23 +27,23 @@ public class VehicleEntity {
         this.owner = payload.getOwner();
     }
 
-    public VehicleEntity(VehicleUpdatePayload payload) {
-        this.id = payload.getId();
-        if (payload.getMake() != null && (!payload.getMake().isEmpty())) {
-            this.make = payload.getMake();
-        }
-        this.make = payload.getMake();
-        this.model = payload.getModel();
-        this.registrationDateTime = payload.getRegistrationDateTime();
-        this.caseNumber = payload.getCaseNumber();
-        this.mulkiaNumber = payload.getMulkiaNumber();
-        this.color = payload.getColor();
-        this.parkingSlot = payload.getParkingSlot();
-        this.isCaseInCourt = payload.getIsCaseInCourt();
-        this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
-        this.numberPlate = payload.getNumberPlate();
-        this.owner = payload.getOwner();
-    }
+//    public VehicleEntity(VehicleUpdatePayload payload) {
+//        this.id = payload.getId();
+//        if (payload.getMake() != null && (!payload.getMake().isEmpty())) {
+//            this.make = payload.getMake();
+//        }
+//        this.make = payload.getMake();
+//        this.model = payload.getModel();
+//        this.registrationDateTime = payload.getRegistrationDateTime();
+//        this.caseNumber = payload.getCaseNumber();
+//        this.mulkiaNumber = payload.getMulkiaNumber();
+//        this.color = payload.getColor();
+//        this.parkingSlot = payload.getParkingSlot();
+//        this.isCaseInCourt = payload.getIsCaseInCourt();
+//        this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
+//        this.numberPlate = payload.getNumberPlate();
+//        this.owner = payload.getOwner();
+//    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

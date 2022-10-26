@@ -1,9 +1,9 @@
 package com.teksecure.service.impoundsrv.controller;
 
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
-import com.teksecure.service.impoundsrv.model.payload.VehicleCreatePayload;
-import com.teksecure.service.impoundsrv.model.payload.VehicleListPayload;
-import com.teksecure.service.impoundsrv.model.payload.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
 import com.teksecure.service.impoundsrv.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,8 +43,10 @@ public class VehicleController {
 
     @PutMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<VehicleEntity> updateVehicle(@RequestBody VehicleUpdatePayload payload) {
-        VehicleEntity updatedVehicle = service.updateVehicle(payload);
+    public ResponseEntity<VehicleEntity> updateVehicle(
+            @RequestParam Integer vehicleId,
+            @RequestBody VehicleUpdatePayload payload) {
+        VehicleEntity updatedVehicle = service.updateVehicle(vehicleId, payload);
         return new ResponseEntity<>(updatedVehicle, HttpStatus.CREATED);
     }
 

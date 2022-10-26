@@ -1,4 +1,4 @@
-package com.teksecure.service.impoundsrv.model.payload;
+package com.teksecure.service.impoundsrv.model.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

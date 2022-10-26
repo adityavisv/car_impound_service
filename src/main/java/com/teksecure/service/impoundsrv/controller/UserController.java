@@ -2,10 +2,10 @@ package com.teksecure.service.impoundsrv.controller;
 
 import com.teksecure.service.impoundsrv.model.entity.Role;
 import com.teksecure.service.impoundsrv.model.entity.User;
-import com.teksecure.service.impoundsrv.model.payload.GenericResponse;
-import com.teksecure.service.impoundsrv.model.payload.JwtResponse;
-import com.teksecure.service.impoundsrv.model.payload.LoginRequest;
-import com.teksecure.service.impoundsrv.model.payload.SignupRequest;
+import com.teksecure.service.impoundsrv.model.payload.response.GenericResponse;
+import com.teksecure.service.impoundsrv.model.payload.response.JwtResponse;
+import com.teksecure.service.impoundsrv.model.payload.request.LoginRequest;
+import com.teksecure.service.impoundsrv.model.payload.request.SignupRequest;
 import com.teksecure.service.impoundsrv.model.type.Erole;
 import com.teksecure.service.impoundsrv.repository.RoleRepository;
 import com.teksecure.service.impoundsrv.repository.UserRepository;

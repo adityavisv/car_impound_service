@@ -1,8 +1,8 @@
 package com.teksecure.service.impoundsrv.service;
 
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
-import com.teksecure.service.impoundsrv.model.payload.VehicleCreatePayload;
-import com.teksecure.service.impoundsrv.model.payload.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
+import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +31,7 @@ public class VehicleService  {
         return repository.save(vehicleInsert);
     }
 
-    public VehicleEntity updateVehicle(VehicleUpdatePayload payload) {
-        Integer vehicleId = payload.getId();
-
+    public VehicleEntity updateVehicle(Integer vehicleId, VehicleUpdatePayload payload) {
         // pull the matching vehicle
         VehicleEntity matchVehicle = repository.findById(vehicleId).orElse(null);
         if (matchVehicle != null) {
