@@ -13,18 +13,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api/v1/zone")
 public class ZoneController {
-    private ParkingZoneService parkingZoneService;
+    private ParkingZoneService service;
 
     @Autowired
-    public ZoneController(ParkingZoneService parkingZoneService) {
-        this.parkingZoneService = parkingZoneService;
+    public ZoneController(ParkingZoneService service) {
+        this.service = service;
     }
 
     @GetMapping
     public ResponseEntity<ParkingSpotListPayload> retrieveZone(
             @RequestParam(required = false) Optional<String> zone,
             @RequestParam(required = false) Optional<String> occupiedStatus) {
-        ParkingSpotListPayload responsePayload = parkingZoneService.retrieveParkingZone(
+        ParkingSpotListPayload responsePayload = service.retrieveParkingZone(
                 zone.isPresent() ? zone.get() : null,
                 occupiedStatus.isPresent() ? occupiedStatus.get() : null
         );
@@ -34,9 +34,9 @@ public class ZoneController {
     @GetMapping(value="/parkingSpot")
     public ResponseEntity<ParkingSpotEntity> retrieveParkingSpotBySlotNum(@RequestParam String zone,
                                                                           @RequestParam Integer slotNumber) {
-        ParkingSpotEntity matchParking = parkingZoneService.retrievParkingSpotBySlotIdentifier(zone, slotNumber);
+        ParkingSpotEntity matchParking = service.retrievParkingSpotBySlotIdentifier(zone, slotNumber);
         if (matchParking != null) {
-            return new ResponseEntity<>(parkingZoneService.retrievParkingSpotBySlotIdentifier(zone, slotNumber),
+            return new ResponseEntity<>(service.retrievParkingSpotBySlotIdentifier(zone, slotNumber),
                     HttpStatus.OK);
         }
         else {
@@ -47,7 +47,7 @@ public class ZoneController {
     @GetMapping(value="/summary")
     public ResponseEntity<ParkingZoneListSummary> retrieveParkingZoneSummaries(
             @RequestParam(required = false) Optional<String> zone) {
-        ParkingZoneListSummary summaries = parkingZoneService.retrieveParkingZoneSummaries(
+        ParkingZoneListSummary summaries = service.retrieveParkingZoneSummaries(
                 zone.isPresent() ? zone.get() : null);
         return new ResponseEntity<>(summaries, HttpStatus.OK);
     }
@@ -57,7 +57,7 @@ public class ZoneController {
             @RequestParam String zone,
             @RequestParam Integer slotNumber,
             @RequestBody VehicleCreatePayload payload) {
-        ParkingSpotEntity savedEntity = parkingZoneService.assignCarToParkingSpot(zone, slotNumber, payload);
+        ParkingSpotEntity savedEntity = service.assignCarToParkingSpot(zone, slotNumber, payload);
         return new ResponseEntity<>(savedEntity, HttpStatus.CREATED);
     }
 
@@ -65,7 +65,7 @@ public class ZoneController {
     public ResponseEntity<GenericResponse> releaseCar(
             @RequestParam String zone,
             @RequestParam Integer slotNumber) {
-        Integer updateRetCode = parkingZoneService.releaseCarFromParking(zone, slotNumber);
+        Integer updateRetCode = service.releaseCarFromParking(zone, slotNumber);
         if (updateRetCode == 0) {
             return new ResponseEntity<>(
                     new GenericResponse("Successfully released", 201),

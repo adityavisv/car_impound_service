@@ -16,16 +16,16 @@ import static com.teksecure.service.impoundsrv.util.Constants.*;
 
 @Service
 public class ParkingZoneService {
-    private ZoneRepository zoneRepository;
+    private ZoneRepository repository;
 
     @Autowired
     public ParkingZoneService(ZoneRepository zoneRepository) {
-        this.zoneRepository = zoneRepository;
+        this.repository = zoneRepository;
     }
 
     public ParkingSpotListPayload retrieveParkingZone(String zone, String ocStatus) {
         if (zone != null) {
-            List<ParkingSpotEntity> allSpotsInZone = zoneRepository.retrieveParkingByZone(zone);
+            List<ParkingSpotEntity> allSpotsInZone = repository.retrieveParkingByZone(zone);
             if (ocStatus != null) {
                 List<ParkingSpotEntity> spotsByOCStatus = allSpotsInZone
                         .stream()
@@ -36,24 +36,24 @@ public class ParkingZoneService {
             return new ParkingSpotListPayload(allSpotsInZone);
         }
         else if (ocStatus != null) {
-            List<ParkingSpotEntity> spotsByOcStatus = zoneRepository.retrieveParkingByOccupiedStatus(ocStatus);
+            List<ParkingSpotEntity> spotsByOcStatus = repository.retrieveParkingByOccupiedStatus(ocStatus);
             return new ParkingSpotListPayload(spotsByOcStatus);
         }
         else {
             List<ParkingSpotEntity> allSpots = new ArrayList<>();
-            zoneRepository.findAll().forEach(allSpots::add);
+            repository.findAll().forEach(allSpots::add);
             return new ParkingSpotListPayload(allSpots);
         }
     }
 
     public ParkingSpotEntity retrievParkingSpotBySlotIdentifier(String zone, Integer slotNumber) {
-        ParkingSpotEntity matchParkingSpot = zoneRepository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
+        ParkingSpotEntity matchParkingSpot = repository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
         return matchParkingSpot;
     }
 
     public ParkingZoneListSummary retrieveParkingZoneSummaries(String zone) {
         if (zone != null) {
-            List<ParkingSpotEntity> allSpotsInZone = zoneRepository.retrieveParkingByZone(zone);
+            List<ParkingSpotEntity> allSpotsInZone = repository.retrieveParkingByZone(zone);
             int totalCapacity = allSpotsInZone.size();
             int occupiedCount = (int) allSpotsInZone.stream()
                     .filter(s -> s.getOccupancyStatus().equals("OCCUPIED"))
@@ -67,7 +67,7 @@ public class ParkingZoneService {
             List<ParkingZoneSummary> summariesList = new ArrayList<>();
 
             List<ParkingSpotEntity> allSpotsInLot = new ArrayList<>();
-            zoneRepository.findAll().forEach(allSpotsInLot::add);
+            repository.findAll().forEach(allSpotsInLot::add);
 
             for (char zoneChar : ZONE_LABELS) {
                 List<ParkingSpotEntity> spotsInZone = allSpotsInLot.stream()
@@ -92,16 +92,16 @@ public class ParkingZoneService {
         entityToSave.setOccupancyStatus("OCCUPIED");
         entityToSave.setOccupiedVehicle(new VehicleEntity(payload));
 
-        ParkingSpotEntity savedEntity = zoneRepository.save(entityToSave);
+        ParkingSpotEntity savedEntity = repository.save(entityToSave);
         return savedEntity;
     }
 
     public Integer releaseCarFromParking(String zone, Integer slotNumber) {
-        ParkingSpotEntity occupiedParkingSpot = zoneRepository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
+        ParkingSpotEntity occupiedParkingSpot = repository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
         if (occupiedParkingSpot.getOccupancyStatus().equals(OCCUPIED)) {
             occupiedParkingSpot.setOccupiedVehicle(null);
             occupiedParkingSpot.setOccupancyStatus(AVAILABLE);
-            zoneRepository.save(occupiedParkingSpot);
+            repository.save(occupiedParkingSpot);
             return 0;
         }
         return 1;
