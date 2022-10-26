@@ -1,7 +1,8 @@
-package com.teksecure.service.impoundsrv.util;
+package com.teksecure.service.impoundsrv.util.auth;
 
 import com.teksecure.service.impoundsrv.model.entity.User;
 import com.teksecure.service.impoundsrv.repository.UserRepository;
+import com.teksecure.service.impoundsrv.util.auth.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

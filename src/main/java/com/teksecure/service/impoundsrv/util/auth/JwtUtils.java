@@ -1,4 +1,4 @@
-package com.teksecure.service.impoundsrv.util;
+package com.teksecure.service.impoundsrv.util.auth;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;

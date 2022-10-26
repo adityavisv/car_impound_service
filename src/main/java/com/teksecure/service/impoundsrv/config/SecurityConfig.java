@@ -1,8 +1,8 @@
 package com.teksecure.service.impoundsrv.config;
 
-import com.teksecure.service.impoundsrv.util.AuthEntryPointJwt;
-import com.teksecure.service.impoundsrv.util.AuthTokenFilter;
-import com.teksecure.service.impoundsrv.util.UserDetailsServiceImpl;
+import com.teksecure.service.impoundsrv.util.auth.AuthEntryPointJwt;
+import com.teksecure.service.impoundsrv.util.auth.AuthTokenFilter;
+import com.teksecure.service.impoundsrv.util.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
