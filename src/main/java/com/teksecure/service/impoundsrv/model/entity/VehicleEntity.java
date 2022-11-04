@@ -8,11 +8,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.Base64;
 import java.util.Date;
 
 @Entity
@@ -109,13 +105,10 @@ public class VehicleEntity {
     }
 
     public void updateImage(MultipartFile file) {
-        byte[] bytes = null;
         try {
-            bytes  = file.getBytes();
+            this.image = file.getBytes();
         } catch (IOException ex) {
 
         }
-
-        this.image = Base64.getEncoder().encode(bytes);
     }
 }

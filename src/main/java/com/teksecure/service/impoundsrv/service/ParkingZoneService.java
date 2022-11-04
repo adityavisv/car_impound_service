@@ -6,10 +6,12 @@ import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
+import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneSummary;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import com.teksecure.service.impoundsrv.repository.ZoneRepository;
+import com.teksecure.service.impoundsrv.util.helper.GeneralHelper;
 import org.hibernate.SessionFactory;
 import org.hibernate.ejb.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +42,30 @@ public class ParkingZoneService {
     public ParkingSpotListPayload retrieveParkingZone(String zone, String ocStatus) {
         if (zone != null) {
             List<ParkingSpotEntity> allSpotsInZone = repository.retrieveParkingByZone(zone);
+
             if (ocStatus != null) {
                 List<ParkingSpotEntity> spotsByOCStatus = allSpotsInZone
                         .stream()
                         .filter(p -> p.getOccupancyStatus().equals(ocStatus))
                         .collect(Collectors.toList());
-                return new ParkingSpotListPayload(spotsByOCStatus);
+                List<ParkingSpotPayload> spotsByOCStatusPayload =
+                        GeneralHelper.convertParkingSpotEntityToPayload(spotsByOCStatus);
+                return new ParkingSpotListPayload(spotsByOCStatusPayload);
             }
-            return new ParkingSpotListPayload(allSpotsInZone);
+            List<ParkingSpotPayload> allSpotsInZonePayload = GeneralHelper
+                    .convertParkingSpotEntityToPayload(allSpotsInZone);
+            return new ParkingSpotListPayload(allSpotsInZonePayload);
         }
+
+
         else if (ocStatus != null) {
             List<ParkingSpotEntity> spotsByOcStatus = repository.retrieveParkingByOccupiedStatus(ocStatus);
-            return new ParkingSpotListPayload(spotsByOcStatus);
+            return new ParkingSpotListPayload(GeneralHelper.convertParkingSpotEntityToPayload(spotsByOcStatus));
         }
         else {
             List<ParkingSpotEntity> allSpots = new ArrayList<>();
             repository.findAll().forEach(allSpots::add);
-            return new ParkingSpotListPayload(allSpots);
+            return new ParkingSpotListPayload(GeneralHelper.convertParkingSpotEntityToPayload(allSpots));
         }
     }
 

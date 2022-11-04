@@ -13,5 +13,5 @@ import java.util.List;
 public class ParkingSpotListPayload {
     
     @JsonProperty(value = "parkingSpots")
-    private List<ParkingSpotEntity> parkingSpots;
+    private List<ParkingSpotPayload> parkingSpots;
 }
