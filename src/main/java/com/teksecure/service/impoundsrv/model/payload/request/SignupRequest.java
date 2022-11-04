@@ -9,15 +9,15 @@ import java.util.Set;
 
 @Getter @Setter @NoArgsConstructor
 public class SignupRequest {
-    @JsonProperty(value = "username")
+    @JsonProperty(value = "username", required = true)
     private String username;
 
-    @JsonProperty(value = "email")
+    @JsonProperty(value = "email", required = true)
     private String email;
 
-    @JsonProperty(value = "role")
+    @JsonProperty(value = "role", required = true)
     private Set<String> role;
 
-    @JsonProperty(value = "password")
+    @JsonProperty(value = "password", required = true)
     private String password;
 }

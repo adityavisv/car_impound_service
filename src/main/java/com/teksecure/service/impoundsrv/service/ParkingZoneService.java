@@ -1,15 +1,22 @@
 package com.teksecure.service.impoundsrv.service;
 
 import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
+import com.teksecure.service.impoundsrv.model.entity.ReleaseIdentityEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
+import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneSummary;
+import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import com.teksecure.service.impoundsrv.repository.ZoneRepository;
+import org.hibernate.SessionFactory;
+import org.hibernate.ejb.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,9 +28,13 @@ import static com.teksecure.service.impoundsrv.util.Constants.*;
 public class ParkingZoneService {
     private ZoneRepository repository;
 
+    private VehicleRepository vehicleRepository;
+
+
     @Autowired
-    public ParkingZoneService(ZoneRepository zoneRepository) {
+    public ParkingZoneService(ZoneRepository zoneRepository, VehicleRepository vehicleRepository) {
         this.repository = zoneRepository;
+        this.vehicleRepository= vehicleRepository;
     }
 
     public ParkingSpotListPayload retrieveParkingZone(String zone, String ocStatus) {
@@ -74,7 +85,7 @@ public class ParkingZoneService {
 
             for (char zoneChar : ZONE_LABELS) {
                 List<ParkingSpotEntity> spotsInZone = allSpotsInLot.stream()
-                        .filter(s -> s.getZoneLabel().equals(zoneChar)).collect(Collectors.toList());
+                        .filter(s -> s.getZoneLabel().equals(String.valueOf(zoneChar))).collect(Collectors.toList());
                 int totalCapacity = spotsInZone.size();
                 int occupiedCount = (int) spotsInZone.stream()
                         .filter(s -> s.getOccupancyStatus().equals("OCCUPIED"))
@@ -89,19 +100,23 @@ public class ParkingZoneService {
     }
 
     public ParkingSpotEntity assignCarToParkingSpot(String zone, Integer slotNumber, VehicleCreatePayload payload) {
-        ParkingSpotEntity entityToSave = new ParkingSpotEntity();
-        entityToSave.setZoneLabel(zone);
-        entityToSave.setSlotNumber(slotNumber);
+        ParkingSpotEntity entityToSave = repository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
         entityToSave.setOccupancyStatus("OCCUPIED");
-        entityToSave.setOccupiedVehicle(new VehicleEntity(payload));
+        try {
+            entityToSave.setOccupiedVehicle(new VehicleEntity(payload));
+        } catch (IOException ex) {}
 
         ParkingSpotEntity savedEntity = repository.save(entityToSave);
         return savedEntity;
     }
 
-    public Integer releaseCarFromParking(String zone, Integer slotNumber) {
+    public Integer releaseCarFromParking(String zone, Integer slotNumber, ReleaseIdentityPayload releaseIdentityPayload) {
         ParkingSpotEntity occupiedParkingSpot = repository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
         if (occupiedParkingSpot.getOccupancyStatus().equals(OCCUPIED)) {
+            VehicleEntity vehicle = occupiedParkingSpot.getOccupiedVehicle();
+            vehicle.setParkingSlot(null);
+            vehicle.setReleaseIdentity(new ReleaseIdentityEntity(releaseIdentityPayload));
+            vehicleRepository.save(vehicle);
             occupiedParkingSpot.setOccupiedVehicle(null);
             occupiedParkingSpot.setOccupancyStatus(AVAILABLE);
             repository.save(occupiedParkingSpot);

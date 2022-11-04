@@ -3,6 +3,7 @@ package com.teksecure.service.impoundsrv.model.payload.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
+import com.teksecure.service.impoundsrv.model.type.Department;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,4 +46,10 @@ public class VehicleUpdatePayload {
 
     @JsonProperty(value = "owner")
     private OwnerEntity owner;
+
+    @JsonProperty(value = "release")
+    private ReleaseIdentityPayload releaseIdentity;
+
+    @JsonProperty(value = "department")
+    private Department department;
 }

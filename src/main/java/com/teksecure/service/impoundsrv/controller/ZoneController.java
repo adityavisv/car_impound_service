@@ -1,16 +1,19 @@
 package com.teksecure.service.impoundsrv.controller;
 
 import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
+import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.response.GenericResponse;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
 import com.teksecure.service.impoundsrv.service.ParkingZoneService;
+import com.teksecure.service.impoundsrv.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -74,8 +77,9 @@ public class ZoneController {
     @PutMapping(value = "/release")
     public ResponseEntity<GenericResponse> releaseCar(
             @RequestParam String zone,
-            @RequestParam Integer slotNumber) {
-        Integer updateRetCode = service.releaseCarFromParking(zone, slotNumber);
+            @RequestParam Integer slotNumber,
+            @RequestBody ReleaseIdentityPayload ownerPayload) {
+        Integer updateRetCode = service.releaseCarFromParking(zone, slotNumber, ownerPayload);
         if (updateRetCode == 0) {
             return new ResponseEntity<>(
                     new GenericResponse("Successfully released", 201),

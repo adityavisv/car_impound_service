@@ -5,15 +5,21 @@ import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePaylo
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
 import java.util.Date;
 
 @Entity
 @Table(name="vehicles")
 @Getter @Setter @NoArgsConstructor
 public class VehicleEntity {
-    public VehicleEntity(VehicleCreatePayload payload) {
+    public VehicleEntity(VehicleCreatePayload payload) throws IOException {
         this.make = payload.getMake();
         this.model = payload.getModel();
         this.registrationDateTime = payload.getRegistrationDateTime();
@@ -24,26 +30,9 @@ public class VehicleEntity {
         this.isCaseInCourt = payload.getIsCaseInCourt();
         this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
         this.numberPlate = payload.getNumberPlate();
-        this.owner = payload.getOwner();
+        this.owner = new OwnerEntity(payload.getOwner());
     }
 
-//    public VehicleEntity(VehicleUpdatePayload payload) {
-//        this.id = payload.getId();
-//        if (payload.getMake() != null && (!payload.getMake().isEmpty())) {
-//            this.make = payload.getMake();
-//        }
-//        this.make = payload.getMake();
-//        this.model = payload.getModel();
-//        this.registrationDateTime = payload.getRegistrationDateTime();
-//        this.caseNumber = payload.getCaseNumber();
-//        this.mulkiaNumber = payload.getMulkiaNumber();
-//        this.color = payload.getColor();
-//        this.parkingSlot = payload.getParkingSlot();
-//        this.isCaseInCourt = payload.getIsCaseInCourt();
-//        this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
-//        this.numberPlate = payload.getNumberPlate();
-//        this.owner = payload.getOwner();
-//    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -85,6 +74,14 @@ public class VehicleEntity {
     @Column(name = "DEPT")
     private String department;
 
+    @Column(name = "IMAGE")
+    @Lob
+    private byte[] image;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "RELEASE_ID", referencedColumnName = "ID")
+    private ReleaseIdentityEntity releaseIdentity;
+
     public void updateFieldsFromPayload(VehicleUpdatePayload payload) {
         if (payload.getMake() != null) {
             this.make = payload.getMake();
@@ -107,5 +104,18 @@ public class VehicleEntity {
             this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
         if (payload.getOwner() != null)
             this.owner = payload.getOwner();
+        if (payload.getReleaseIdentity() != null)
+            this.releaseIdentity = new ReleaseIdentityEntity(payload.getReleaseIdentity());
+    }
+
+    public void updateImage(MultipartFile file) {
+        byte[] bytes = null;
+        try {
+            bytes  = file.getBytes();
+        } catch (IOException ex) {
+
+        }
+
+        this.image = Base64.getEncoder().encode(bytes);
     }
 }

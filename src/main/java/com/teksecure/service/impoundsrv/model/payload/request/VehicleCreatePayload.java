@@ -2,10 +2,11 @@ package com.teksecure.service.impoundsrv.model.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
+import com.teksecure.service.impoundsrv.model.type.Department;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class VehicleCreatePayload {
     private String model;
 
     @JsonProperty(value = "registrationDateTime", required = true)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
     private Date registrationDateTime;
 
     @JsonProperty(value = "caseNumber", required = true)
@@ -46,8 +47,8 @@ public class VehicleCreatePayload {
     private String numberPlate;
 
     @JsonProperty(value = "owner")
-    private OwnerEntity owner;
+    private OwnerPayload owner;
 
     @JsonProperty(value = "department")
-    private String department;
+    private Department department;
 }

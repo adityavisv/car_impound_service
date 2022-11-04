@@ -6,7 +6,9 @@ import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePaylo
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,12 @@ public class VehicleService  {
     }
 
     public VehicleEntity insertVehicle(VehicleCreatePayload payload) {
-        VehicleEntity vehicleInsert = new VehicleEntity(payload);
+        VehicleEntity vehicleInsert = null;
+        try {
+            vehicleInsert = new VehicleEntity(payload);
+        } catch (IOException ex) {
+
+        }
         return repository.save(vehicleInsert);
     }
 
@@ -43,12 +50,23 @@ public class VehicleService  {
         }
     }
 
+    public VehicleEntity assignVehicleImage(Integer vehicleId, MultipartFile file) {
+        VehicleEntity matchVehicle = repository.findById(vehicleId).orElse(null);
+        if (matchVehicle != null) {
+            matchVehicle.updateImage(file);
+            return repository.save(matchVehicle);
+        }
+        else {
+            return null;
+        }
+    }
+
     public List<VehicleEntity> searchVehicles(
             String make,
             String model,
-            String zone,
-            String ownerFName,
-            String ownerLName
+            String slot,
+            String color,
+            String numberPlate
     ) {
         List<VehicleEntity> allVehicles = repository.fetchAllVehicles();
         if (make != null)
@@ -59,16 +77,16 @@ public class VehicleService  {
             allVehicles = allVehicles.stream()
                     .filter(v -> v.getModel().equals(model)).collect(Collectors.toList());
 
-        if (zone != null)
+        if (slot != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getParkingSlot().startsWith(zone)).collect(Collectors.toList());
-        if (ownerFName != null)
+                    .filter(v -> v.getParkingSlot().equals(slot)).collect(Collectors.toList());
+        if (color != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getOwner().getFirstName().equals(ownerFName))
+                    .filter(v -> v.getColor().equals(color))
                     .collect(Collectors.toList());
-        if (ownerLName != null)
+        if (numberPlate != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getOwner().getLastName().equals(ownerLName))
+                    .filter(v -> v.getNumberPlate().equals(numberPlate))
                     .collect(Collectors.toList());
         return allVehicles;
     }
