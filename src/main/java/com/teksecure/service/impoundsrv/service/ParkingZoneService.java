@@ -108,15 +108,24 @@ public class ParkingZoneService {
         }
     }
 
-    public ParkingSpotEntity assignCarToParkingSpot(String zone, Integer slotNumber, VehicleCreatePayload payload) {
-        ParkingSpotEntity entityToSave = repository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
-        entityToSave.setOccupancyStatus("OCCUPIED");
-        try {
-            entityToSave.setOccupiedVehicle(new VehicleEntity(payload));
-        } catch (IOException ex) {}
-
-        ParkingSpotEntity savedEntity = repository.save(entityToSave);
-        return savedEntity;
+    public ParkingSpotListPayload assignCarToParkingSpot(List<String> parkingSpots, VehicleCreatePayload payload) {
+        VehicleEntity savedVehicle = null;
+        List<ParkingSpotPayload> savedPayloads = new ArrayList<>();
+        for (String spot : parkingSpots) {
+            String zone = spot.substring(0,1);
+            Integer slotNumber = Integer.parseInt(spot.substring(1));
+            if (savedVehicle == null) {
+                try {
+                    savedVehicle = vehicleRepository.save(new VehicleEntity(payload));
+                } catch (IOException ex) {}
+            }
+            ParkingSpotEntity entityToSave = repository.retrieveParkingSpotBySlotIdentifier(zone, slotNumber);
+            entityToSave.setOccupiedVehicle(savedVehicle);
+            entityToSave.setOccupancyStatus(OCCUPIED);
+            ParkingSpotEntity savedEntity = repository.save(entityToSave);
+            savedPayloads.add(new ParkingSpotPayload(savedEntity));
+        }
+        return new ParkingSpotListPayload(savedPayloads);
     }
 
     public Integer releaseCarFromParking(String zone, Integer slotNumber, ReleaseIdentityPayload releaseIdentityPayload) {

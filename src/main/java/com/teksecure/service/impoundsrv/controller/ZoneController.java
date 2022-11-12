@@ -7,14 +7,13 @@ import com.teksecure.service.impoundsrv.model.payload.response.GenericResponse;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
 import com.teksecure.service.impoundsrv.service.ParkingZoneService;
-import com.teksecure.service.impoundsrv.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -31,12 +30,11 @@ public class ZoneController {
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ParkingSpotListPayload> retrieveZone(
-            @RequestParam(required = false) Optional<String> zone,
-            @RequestParam(required = false) Optional<String> occupiedStatus) {
+            @RequestParam(required = false) String zone,
+            @RequestParam(required = false) String occupiedStatus) {
         ParkingSpotListPayload responsePayload = service.retrieveParkingZone(
-                zone.isPresent() ? zone.get() : null,
-                occupiedStatus.isPresent() ? occupiedStatus.get() : null
-        );
+                zone,
+                occupiedStatus);
         return new ResponseEntity<>(responsePayload, HttpStatus.OK);
     }
 
@@ -65,12 +63,11 @@ public class ZoneController {
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping(value="/assign")
-    public ResponseEntity<ParkingSpotEntity> assignCarToParking(
-            @RequestParam String zone,
-            @RequestParam Integer slotNumber,
+    public ResponseEntity<ParkingSpotListPayload> assignCarToParking(
+            @RequestParam("spot") List<String> parkingSpots,
             @RequestBody VehicleCreatePayload payload) {
-        ParkingSpotEntity savedEntity = service.assignCarToParkingSpot(zone, slotNumber, payload);
-        return new ResponseEntity<>(savedEntity, HttpStatus.CREATED);
+        ParkingSpotListPayload savedPayloads = service.assignCarToParkingSpot(parkingSpots, payload);
+        return new ResponseEntity<>(savedPayloads, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")

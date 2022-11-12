@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public void handleIllegalArgument(IllegalArgumentException ex) {
+    @ExceptionHandler(Exception.class)
+    public void handleIllegalArgument(Exception ex) {
+        System.out.println("HTTP REQUEST 400");
         System.out.println(ex.getMessage());
     }
 }

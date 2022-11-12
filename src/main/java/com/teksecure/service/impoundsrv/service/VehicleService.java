@@ -50,10 +50,10 @@ public class VehicleService  {
         }
     }
 
-    public VehicleEntity assignVehicleImage(Integer vehicleId, MultipartFile file) {
+    public VehicleEntity assignVehicleImage(Integer vehicleId, List<MultipartFile> files) {
         VehicleEntity matchVehicle = repository.findById(vehicleId).orElse(null);
         if (matchVehicle != null) {
-            matchVehicle.updateImage(file);
+            matchVehicle.updateImage(files);
             return repository.save(matchVehicle);
         }
         else {

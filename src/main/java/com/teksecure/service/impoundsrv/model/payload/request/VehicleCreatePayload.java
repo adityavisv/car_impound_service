@@ -25,11 +25,15 @@ public class VehicleCreatePayload {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
     private Date registrationDateTime;
 
+    @JsonProperty(value = "releaseDate", required = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private Date releaseDate;
+
     @JsonProperty(value = "caseNumber", required = true)
-    private Integer caseNumber;
+    private String caseNumber;
 
     @JsonProperty(value = "mulkiaNumber", required = true)
-    private Integer mulkiaNumber;
+    private String mulkiaNumber;
 
     @JsonProperty(value = "color", required = true)
     private String color;

@@ -74,10 +74,10 @@ public class VehicleController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<GenericResponse> assignImageToVehicle(@RequestParam("vehicleId") String vehicleId,
-                                                                @RequestParam("file")MultipartFile file
+                                                                @RequestParam("file") List<MultipartFile> files
                                                                 ) {
         Integer vehicleIdInt = Integer.parseInt(vehicleId);
-        VehicleEntity updatedVehicle = service.assignVehicleImage(vehicleIdInt, file);
+        VehicleEntity updatedVehicle = service.assignVehicleImage(vehicleIdInt, files);
         GenericResponse response = null;
         if (updatedVehicle != null) {
             response = new GenericResponse("Image uploaded", 201);

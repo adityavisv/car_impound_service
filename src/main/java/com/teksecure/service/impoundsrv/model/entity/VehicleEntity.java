@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="vehicles")
@@ -27,6 +28,7 @@ public class VehicleEntity {
         this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
         this.numberPlate = payload.getNumberPlate();
         this.owner = new OwnerEntity(payload.getOwner());
+        this.image1 = this.image2  = this.image3 = this.image4 = this.image5 = null;
     }
 
     @Id
@@ -42,11 +44,14 @@ public class VehicleEntity {
     @Column(name = "REG_DT_TIME")
     private Date registrationDateTime;
 
+    @Column(name = "RELEASE_DT")
+    private Date releaseDate;
+
     @Column(name = "CASE_NUM")
-    private Integer caseNumber;
+    private String caseNumber;
 
     @Column(name = "MULKIA_NUM")
-    private Integer mulkiaNumber;
+    private String mulkiaNumber;
 
     @Column(name = "COLOR")
     private String color;
@@ -70,9 +75,25 @@ public class VehicleEntity {
     @Column(name = "DEPT")
     private String department;
 
-    @Column(name = "IMAGE")
+    @Column(name = "IMAGE1")
     @Lob
-    private byte[] image;
+    private byte[] image1;
+
+    @Column(name = "IMAGE2")
+    @Lob
+    private byte[] image2;
+
+    @Column(name = "IMAGE3")
+    @Lob
+    private byte[] image3;
+
+    @Column(name = "IMAGE4")
+    @Lob
+    private byte[] image4;
+
+    @Column(name = "IMAGE5")
+    @Lob
+    private byte[] image5;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "RELEASE_ID", referencedColumnName = "ID")
@@ -102,11 +123,26 @@ public class VehicleEntity {
             this.owner = payload.getOwner();
         if (payload.getReleaseIdentity() != null)
             this.releaseIdentity = new ReleaseIdentityEntity(payload.getReleaseIdentity());
+        if (payload.getReleaseDate() != null)
+            this.releaseDate = payload.getReleaseDate();
     }
 
-    public void updateImage(MultipartFile file) {
+    public void updateImage(List<MultipartFile> files) {
+
         try {
-            this.image = file.getBytes();
+            switch(files.size()) {
+                case 5:
+                    this.image5 = files.get(4).getBytes();
+                case 4:
+                    this.image4 = files.get(3).getBytes();
+                case 3:
+                    this.image3 = files.get(2).getBytes();
+                case 2:
+                    this.image2 = files.get(1).getBytes();
+                case 1:
+                    this.image1 = files.get(0).getBytes();
+                    break;
+            }
         } catch (IOException ex) {
 
         }

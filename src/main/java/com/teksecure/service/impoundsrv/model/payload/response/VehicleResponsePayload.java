@@ -10,10 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Getter @Setter @NoArgsConstructor
 public class VehicleResponsePayload {
@@ -24,6 +24,7 @@ public class VehicleResponsePayload {
         this.model = entity.getModel();
         this.color = entity.getColor();
         this.registrationDateTime = entity.getRegistrationDateTime();
+        this.registrationDateTime = entity.getRegistrationDateTime();
         this.caseNumber = entity.getCaseNumber();
         this.mulkiaNumber = entity.getMulkiaNumber();
         this.parkingSlot = entity.getParkingSlot();
@@ -32,11 +33,24 @@ public class VehicleResponsePayload {
         this.numberPlate = entity.getNumberPlate();
         this.owner = entity.getOwner();
         this.releaseIdentity = entity.getReleaseIdentity();
+        this.releaseDate = entity.getReleaseDate();
+        this.images = new ArrayList<>();
 
-        if (entity.getImage() != null)
-        {
-            byte[] bytes  = entity.getImage();
-            this.image = Base64.getEncoder().encodeToString(bytes);
+        if (entity.getImage1() != null) {
+            byte[] bytes = entity.getImage1();
+            images.add(Base64.getEncoder().encodeToString(bytes));
+        }
+        if (entity.getImage2() != null) {
+            images.add(Base64.getEncoder().encodeToString(entity.getImage2()));
+        }
+        if (entity.getImage3() != null) {
+            images.add(Base64.getEncoder().encodeToString(entity.getImage3()));
+        }
+        if (entity.getImage4() != null) {
+            images.add(Base64.getEncoder().encodeToString(entity.getImage4()));
+        }
+        if (entity.getImage5() != null) {
+            images.add(Base64.getEncoder().encodeToString(entity.getImage5()));
         }
 
     }
@@ -54,11 +68,15 @@ public class VehicleResponsePayload {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
     private Date registrationDateTime;
 
+    @JsonProperty(value = "releaseDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private Date releaseDate;
+
     @JsonProperty(value = "caseNumber", required = true)
-    private Integer caseNumber;
+    private String caseNumber;
 
     @JsonProperty(value = "mulkiaNumber", required = true)
-    private Integer mulkiaNumber;
+    private String mulkiaNumber;
 
     @JsonProperty(value = "color", required = true)
     private String color;
@@ -82,7 +100,7 @@ public class VehicleResponsePayload {
     private Department department;
 
     @JsonProperty(value = "image")
-    private String image;
+    private List<String> images;
 
     @JsonProperty(value ="releaseIdentity")
     private ReleaseIdentityEntity releaseIdentity;
