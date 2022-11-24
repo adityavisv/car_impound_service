@@ -6,6 +6,8 @@ import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
 import com.teksecure.service.impoundsrv.model.entity.ReleaseIdentityEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.type.Department;
+import com.teksecure.service.impoundsrv.model.type.Emirate;
+import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,17 +25,22 @@ public class VehicleResponsePayload {
         this.make = entity.getMake();
         this.model = entity.getModel();
         this.color = entity.getColor();
+        this.type = VehicleType.valueOf(entity.getType());
         this.registrationDateTime = entity.getRegistrationDateTime();
         this.registrationDateTime = entity.getRegistrationDateTime();
+        this.isWanted = entity.getIsWanted();
+        this.emirate = Emirate.valueOf(entity.getEmirate());
+        this.category = entity.getCategory();
+        this.code = entity.getCode();
         this.caseNumber = entity.getCaseNumber();
-        this.mulkiaNumber = entity.getMulkiaNumber();
+        this.chassisNumber = entity.getChassisNumber();
         this.parkingSlot = entity.getParkingSlot();
-        this.isCaseInCourt = entity.getIsCaseInCourt();
-        this.isCarToBeAuctioned = entity.getIsCarToBeAuctioned();
         this.numberPlate = entity.getNumberPlate();
         this.owner = entity.getOwner();
         this.releaseIdentity = entity.getReleaseIdentity();
-        this.releaseDate = entity.getReleaseDate();
+        this.estimatedReleaseDate = entity.getEstimatedReleaseDate();
+        if (entity.getDepartment() != null)
+            this.department = Department.valueOf(entity.getDepartment());
         this.images = new ArrayList<>();
 
         if (entity.getImage1() != null) {
@@ -64,19 +71,22 @@ public class VehicleResponsePayload {
     @JsonProperty(value = "model", required = true)
     private String model;
 
+    @JsonProperty(value = "type")
+    private VehicleType type;
+
     @JsonProperty(value = "registrationDateTime", required = true)
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
     private Date registrationDateTime;
 
-    @JsonProperty(value = "releaseDate")
+    @JsonProperty(value = "estimatedReleaseDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date releaseDate;
+    private Date estimatedReleaseDate;
 
     @JsonProperty(value = "caseNumber", required = true)
     private String caseNumber;
 
-    @JsonProperty(value = "mulkiaNumber", required = true)
-    private String mulkiaNumber;
+    @JsonProperty(value = "chassisNumber", required = true)
+    private String chassisNumber;
 
     @JsonProperty(value = "color", required = true)
     private String color;
@@ -84,11 +94,8 @@ public class VehicleResponsePayload {
     @JsonProperty(value = "parkingSlot", required = true)
     private String parkingSlot;
 
-    @JsonProperty(value = "isCaseInCourt")
-    private Boolean isCaseInCourt = false;
-
-    @JsonProperty(value = "isCarToBeAuctioned")
-    private Boolean isCarToBeAuctioned = false;
+    @JsonProperty(value = "isWanted", required = true)
+    private Boolean isWanted;
 
     @JsonProperty(value = "numberPlate")
     private String numberPlate;
@@ -99,7 +106,16 @@ public class VehicleResponsePayload {
     @JsonProperty(value = "department")
     private Department department;
 
-    @JsonProperty(value = "image")
+    @JsonProperty(value = "emirate")
+    private Emirate emirate;
+
+    @JsonProperty(value = "category")
+    private String category;
+
+    @JsonProperty(value = "code")
+    private String code;
+
+    @JsonProperty(value = "images")
     private List<String> images;
 
     @JsonProperty(value ="releaseIdentity")

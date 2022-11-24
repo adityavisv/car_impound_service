@@ -13,5 +13,5 @@ import java.util.List;
 public class VehicleListPayload {
 
     @JsonProperty(value = "vehicles")
-    private List<VehicleEntity> vehicles;
+    private List<VehicleResponsePayload> vehicles;
 }

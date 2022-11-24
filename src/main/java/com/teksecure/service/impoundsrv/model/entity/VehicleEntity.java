@@ -19,16 +19,20 @@ public class VehicleEntity {
     public VehicleEntity(VehicleCreatePayload payload) throws IOException {
         this.make = payload.getMake();
         this.model = payload.getModel();
+        this.type = payload.getType().toValue();
+        this.isWanted = payload.getIsWanted();
+        this.category = payload.getCategory();
+        this.emirate = payload.getEmirate().toValue();
+        this.code = payload.getCode();
         this.registrationDateTime = payload.getRegistrationDateTime();
         this.caseNumber = payload.getCaseNumber();
-        this.mulkiaNumber = payload.getMulkiaNumber();
+        this.chassisNumber = payload.getChassisNumber();
         this.color = payload.getColor();
         this.parkingSlot = payload.getParkingSlot();
-        this.isCaseInCourt = payload.getIsCaseInCourt();
-        this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
         this.numberPlate = payload.getNumberPlate();
         this.owner = new OwnerEntity(payload.getOwner());
         this.image1 = this.image2  = this.image3 = this.image4 = this.image5 = null;
+        this.department = payload.getDepartment().toValue();
     }
 
     @Id
@@ -41,17 +45,20 @@ public class VehicleEntity {
     @Column(name = "MODEL")
     private String model;
 
+    @Column(name = "TYPE")
+    private String type;
+
     @Column(name = "REG_DT_TIME")
     private Date registrationDateTime;
 
     @Column(name = "RELEASE_DT")
-    private Date releaseDate;
+    private Date estimatedReleaseDate;
 
     @Column(name = "CASE_NUM")
     private String caseNumber;
 
-    @Column(name = "MULKIA_NUM")
-    private String mulkiaNumber;
+    @Column(name = "CHASSIS_NUM")
+    private String chassisNumber;
 
     @Column(name = "COLOR")
     private String color;
@@ -59,11 +66,14 @@ public class VehicleEntity {
     @Column(name = "PARKING_SLOT")
     private String parkingSlot;
 
-    @Column(name = "IS_CASE_IN_COURT")
-    private Boolean isCaseInCourt;
+    @Column(name = "EMIRATE")
+    private String emirate;
 
-    @Column(name = "IS_CAR_AUCTION")
-    private Boolean isCarToBeAuctioned;
+    @Column(name = "CATEGORY")
+    private String category;
+
+    @Column(name = "CODE")
+    private String code;
 
     @Column(name = "NUMBER_PLATE")
     private String numberPlate;
@@ -72,8 +82,15 @@ public class VehicleEntity {
     @JoinColumn(name = "OWNER_ID", referencedColumnName = "ID")
     private OwnerEntity owner;
 
-    @Column(name = "DEPT")
+    @Column(name = "DEPARTMENT")
     private String department;
+
+    @Column(name = "IS_WANTED")
+    private Boolean isWanted;
+
+    @Column(name = "RELEASE_DOCUMENT")
+    @Lob
+    private byte[] releaseDocument;
 
     @Column(name = "IMAGE1")
     @Lob
@@ -109,24 +126,27 @@ public class VehicleEntity {
             this.registrationDateTime = payload.getRegistrationDateTime();
         if (payload.getCaseNumber() != null)
             this.caseNumber = payload.getCaseNumber();
-        if (payload.getMulkiaNumber() != null)
-            this.mulkiaNumber = payload.getMulkiaNumber();
+        if (payload.getChassisNumber() != null)
+            this.chassisNumber = payload.getChassisNumber();
         if (payload.getColor() != null)
             this.color = payload.getColor();
         if (payload.getParkingSlot() != null)
             this.parkingSlot = payload.getParkingSlot();
-        if (payload.getIsCaseInCourt() != null)
-            this.isCaseInCourt = payload.getIsCaseInCourt();
-        if (payload.getIsCarToBeAuctioned() != null)
-            this.isCarToBeAuctioned = payload.getIsCarToBeAuctioned();
         if (payload.getOwner() != null)
             this.owner = payload.getOwner();
         if (payload.getReleaseIdentity() != null)
             this.releaseIdentity = new ReleaseIdentityEntity(payload.getReleaseIdentity());
-        if (payload.getReleaseDate() != null)
-            this.releaseDate = payload.getReleaseDate();
+        if (payload.getEstimatedReleaseDate() != null)
+            this.estimatedReleaseDate = payload.getEstimatedReleaseDate();
     }
 
+    public void updateReleaseDocument(MultipartFile file) {
+        try {
+            this.releaseDocument = file.getBytes();
+        } catch (IOException ex) {
+
+        }
+    }
     public void updateImage(List<MultipartFile> files) {
 
         try {

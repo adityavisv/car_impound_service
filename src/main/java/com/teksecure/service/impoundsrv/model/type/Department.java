@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Department {
     CID("CID"),
-    DRUGS("Drugs"),
-    ALCOHOL("Alcohol"),
-    TRAFFIC("Traffic"),
-    ACCIDENT_AND_OTHER("Accident and other");
+    DRUGS("DRUGS"),
+    ALCOHOL("ALCOHOL"),
+    TRAFFIC("TRAFFIC"),
+    ACCIDENT_AND_OTHER("ACCIDENT_AND_OTHER");
 
     private final String idText;
 

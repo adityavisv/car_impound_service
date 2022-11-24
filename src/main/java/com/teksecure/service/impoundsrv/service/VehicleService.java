@@ -1,14 +1,19 @@
 package com.teksecure.service.impoundsrv.service;
 
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
+import com.teksecure.service.impoundsrv.model.payload.request.SearchCriteria;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
+import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,33 +66,100 @@ public class VehicleService  {
         }
     }
 
-    public List<VehicleEntity> searchVehicles(
-            String make,
-            String model,
-            String slot,
-            String color,
-            String numberPlate
-    ) {
+    public VehicleEntity assignReleaseDocument(Integer vehicleId, MultipartFile file) {
+        VehicleEntity matchVehicle = repository.findById(vehicleId).orElse(null);
+        if (matchVehicle != null) {
+            matchVehicle.updateReleaseDocument(file);
+            return repository.save(matchVehicle);
+        } else {
+            return null;
+        }
+    }
+
+    public List<VehicleResponsePayload> searchVehicles(SearchCriteria criteria) {
         List<VehicleEntity> allVehicles = repository.fetchAllVehicles();
-        if (make != null)
+        if (criteria.getMake()  != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getMake().equals(make)).collect(Collectors.toList());
+                    .filter(v -> v.getMake().equals(criteria.getMake())).collect(Collectors.toList());
 
-        if (model != null)
+        if (criteria.getModel() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getModel().equals(model)).collect(Collectors.toList());
+                    .filter(v -> v.getModel().equals(criteria.getModel())).collect(Collectors.toList());
 
-        if (slot != null)
+        if (criteria.getSlot() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getParkingSlot().equals(slot)).collect(Collectors.toList());
-        if (color != null)
+                    .filter(v -> v.getParkingSlot().equals(criteria.getSlot())).collect(Collectors.toList());
+        if (criteria.getColor() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getColor().equals(color))
+                    .filter(v -> v.getColor().equals(criteria.getColor()))
                     .collect(Collectors.toList());
-        if (numberPlate != null)
+        if (criteria.getNumberPlate() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getNumberPlate().equals(numberPlate))
+                    .filter(v -> v.getNumberPlate().equals(criteria.getNumberPlate()))
                     .collect(Collectors.toList());
-        return allVehicles;
+        if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
+            Date startDate = criteria.getStartDate();
+            Date endDate = criteria.getEndDate();
+            allVehicles = allVehicles.stream()
+                    .filter(v -> (v.getRegistrationDateTime().after(startDate) && v.getRegistrationDateTime().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+        if (criteria.getOwnerFirstname() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getOwner().getFirstName().equals(criteria.getOwnerFirstname()))
+                    .collect(Collectors.toList());
+        if (criteria.getOwnerLastname() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getOwner().getLastName().equals(criteria.getOwnerLastname()))
+                    .collect(Collectors.toList());
+        if (criteria.getCaseNumber() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getCaseNumber().equals(criteria.getCaseNumber()))
+                    .collect(Collectors.toList());
+        if (criteria.getIsWanted() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getIsWanted().equals(criteria.getIsWanted()))
+                    .collect(Collectors.toList());
+        if (criteria.getChassisNumber() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getChassisNumber().equals(criteria.getChassisNumber()))
+                    .collect(Collectors.toList());
+        if (criteria.getType() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getType().equals(criteria.getType()))
+                    .collect(Collectors.toList());
+        if (criteria.getEmirate() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getEmirate().equals(criteria.getEmirate()))
+                    .collect(Collectors.toList());
+        if (criteria.getCategory() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getCategory().equals(criteria.getCategory()))
+                    .collect(Collectors.toList());
+        if (criteria.getCode() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getCode().equals(criteria.getCode()))
+                    .collect(Collectors.toList());
+        if (criteria.getReleaseDate() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getEstimatedReleaseDate().equals(criteria.getReleaseDate()))
+                    .collect(Collectors.toList());
+        if (criteria.getReleaseFirstname() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getReleaseIdentity().getFirstName().equals(criteria.getReleaseFirstname()))
+                    .collect(Collectors.toList());
+        if (criteria.getReleaseLastname() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getReleaseIdentity().getLastName().equals(criteria.getReleaseLastname()))
+                    .collect(Collectors.toList());
+        if (criteria.getOwnerNationality() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getOwner().getNationality().equals(criteria.getOwnerNationality()))
+                    .collect(Collectors.toList());
+        List<VehicleResponsePayload> finalPayloadList = new ArrayList<>();
+        for (VehicleEntity entity :allVehicles) {
+            finalPayloadList.add(new VehicleResponsePayload(entity));
+        }
+        return finalPayloadList;
     }
 }

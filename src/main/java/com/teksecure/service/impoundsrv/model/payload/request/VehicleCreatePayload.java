@@ -3,6 +3,8 @@ package com.teksecure.service.impoundsrv.model.payload.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teksecure.service.impoundsrv.model.type.Department;
+import com.teksecure.service.impoundsrv.model.type.Emirate;
+import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,19 +23,31 @@ public class VehicleCreatePayload {
     @JsonProperty(value = "model", required = true)
     private String model;
 
+    @JsonProperty(value = "type", required = true)
+    private VehicleType type;
+
     @JsonProperty(value = "registrationDateTime", required = true)
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
     private Date registrationDateTime;
 
-    @JsonProperty(value = "releaseDate", required = false)
+    @JsonProperty(value = "estimatedReleaseDate", required = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date releaseDate;
+    private Date estimatedReleaseDate;
 
-    @JsonProperty(value = "caseNumber", required = true)
+    @JsonProperty(value = "caseNumber", required = false)
     private String caseNumber;
 
-    @JsonProperty(value = "mulkiaNumber", required = true)
-    private String mulkiaNumber;
+    @JsonProperty(value = "chassisNumber", required = true)
+    private String chassisNumber;
+
+    @JsonProperty(value = "emirate", required = true)
+    private Emirate emirate;
+
+    @JsonProperty(value = "category", required = true)
+    private String category;
+
+    @JsonProperty(value = "code", required = true)
+    private String code;
 
     @JsonProperty(value = "color", required = true)
     private String color;
@@ -41,11 +55,8 @@ public class VehicleCreatePayload {
     @JsonProperty(value = "parkingSlot", required = true)
     private String parkingSlot;
 
-    @JsonProperty(value = "isCaseInCourt")
-    private Boolean isCaseInCourt = false;
-
-    @JsonProperty(value = "isCarToBeAuctioned")
-    private Boolean isCarToBeAuctioned = false;
+    @JsonProperty(value = "isWanted", required = true)
+    private Boolean isWanted;
 
     @JsonProperty(value = "numberPlate")
     private String numberPlate;

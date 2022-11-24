@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
 import com.teksecure.service.impoundsrv.model.type.Department;
+import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,19 +20,22 @@ public class VehicleUpdatePayload {
     @JsonProperty(value = "model")
     private String model;
 
+    @JsonProperty(value = "type")
+    private VehicleType type;
+
     @JsonProperty(value = "registrationDateTime")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss")
     private Date registrationDateTime;
 
-    @JsonProperty(value = "releaseDate")
+    @JsonProperty(value = "estimatedReleaseDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date releaseDate;
+    private Date estimatedReleaseDate;
 
     @JsonProperty(value = "caseNumber")
     private String caseNumber;
 
-    @JsonProperty(value = "mulkiaNumber")
-    private String mulkiaNumber;
+    @JsonProperty(value = "chassisNumber")
+    private String chassisNumber;
 
     @JsonProperty(value = "color")
     private String color;

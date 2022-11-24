@@ -6,6 +6,7 @@ import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePaylo
 import com.teksecure.service.impoundsrv.model.payload.response.GenericResponse;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
+import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
 import com.teksecure.service.impoundsrv.service.ParkingZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,19 +73,19 @@ public class ZoneController {
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping(value = "/release")
-    public ResponseEntity<GenericResponse> releaseCar(
+    public ResponseEntity<VehicleResponsePayload> releaseCar(
             @RequestParam String zone,
             @RequestParam Integer slotNumber,
             @RequestBody ReleaseIdentityPayload ownerPayload) {
-        Integer updateRetCode = service.releaseCarFromParking(zone, slotNumber, ownerPayload);
-        if (updateRetCode == 0) {
+        VehicleResponsePayload updatedVehicle = service.releaseCarFromParking(zone, slotNumber, ownerPayload);
+        if (updatedVehicle != null) {
             return new ResponseEntity<>(
-                    new GenericResponse("Successfully released", 201),
+                   updatedVehicle,
                     HttpStatus.CREATED);
         }
         else {
             return new ResponseEntity<>(
-                    new GenericResponse("Invalid Parking Slot Number", 400)
+                    updatedVehicle
             , HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,5 +1,6 @@
 package com.teksecure.service.impoundsrv.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.type.OwnerIdType;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "release_identity")
@@ -21,6 +23,7 @@ public class ReleaseIdentityEntity {
         this.contactNumber = payload.getContactNumber();
         this.emailAddress = payload.getEmailAddress();
         this.nationality = payload.getNationality();
+        this.releaseDateTime = new Date();
     }
 
     @Id
@@ -47,4 +50,8 @@ public class ReleaseIdentityEntity {
 
     @Column(name = "NATIONALITY")
     private String nationality;
+
+    @Column(name = "RELEASE_DT_TM")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
+    private Date releaseDateTime;
 }
