@@ -2,6 +2,7 @@ package com.teksecure.service.impoundsrv.model.entity;
 
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ public class VehicleEntity {
         this.owner = new OwnerEntity(payload.getOwner());
         this.image1 = this.image2  = this.image3 = this.image4 = this.image5 = null;
         this.department = payload.getDepartment().toValue();
+        this.vehicleStatus = VehicleStatus.REGISTERED.toValue();
     }
 
     @Id
@@ -84,6 +86,9 @@ public class VehicleEntity {
 
     @Column(name = "DEPARTMENT")
     private String department;
+
+    @Column(name = "STATUS")
+    private String vehicleStatus;
 
     @Column(name = "IS_WANTED")
     private Boolean isWanted;

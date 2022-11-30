@@ -6,14 +6,11 @@ import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.response.*;
+import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import com.teksecure.service.impoundsrv.repository.ZoneRepository;
 import com.teksecure.service.impoundsrv.util.helper.GeneralHelper;
-import org.hibernate.SessionFactory;
-import org.hibernate.ejb.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.support.incrementer.AbstractColumnMaxValueIncrementer;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -135,6 +132,7 @@ public class ParkingZoneService {
 
             vehicle.setParkingSlot(null);
             vehicle.setReleaseIdentity(new ReleaseIdentityEntity(releaseIdentityPayload));
+            vehicle.setVehicleStatus(VehicleStatus.PRE_RELEASE.toValue());
             vehicleResponsePayload = new VehicleResponsePayload(vehicleRepository.save(vehicle));
 
             for (String slot : parkingSlots) {

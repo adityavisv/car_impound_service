@@ -4,7 +4,9 @@ import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.SearchCriteria;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
+import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
 import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,10 +158,37 @@ public class VehicleService  {
             allVehicles = allVehicles.stream()
                     .filter(v -> v.getOwner().getNationality().equals(criteria.getOwnerNationality()))
                     .collect(Collectors.toList());
+        if (criteria.getEstimatedReleaseDate() != null)
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getEstimatedReleaseDate().equals(criteria.getEstimatedReleaseDate()))
+                    .collect(Collectors.toList());
         List<VehicleResponsePayload> finalPayloadList = new ArrayList<>();
         for (VehicleEntity entity :allVehicles) {
             finalPayloadList.add(new VehicleResponsePayload(entity));
         }
         return finalPayloadList;
     }
+
+    public VehicleListPayload retrieveReleaseQueue() {
+        List<VehicleEntity> allVehicles = repository.fetchAllVehicles();
+        List<VehicleEntity> vehiclesInReleaseStatus =
+                allVehicles.stream().filter(v -> v.getVehicleStatus().equals(VehicleStatus.PRE_RELEASE.toValue()))
+                        .collect(Collectors.toList());
+        List<VehicleResponsePayload> payloadList = new ArrayList<>();
+        for (VehicleEntity entity : vehiclesInReleaseStatus) {
+            payloadList.add(new VehicleResponsePayload(entity));
+        }
+        return new VehicleListPayload(payloadList);
+    }
+
+    public VehicleResponsePayload doFinalRelease(Integer vehicleId) {
+        VehicleEntity entity = repository.findById(vehicleId).orElse(null);
+        if (entity.getVehicleStatus().equals(VehicleStatus.PRE_RELEASE.toValue())) {
+            entity.setVehicleStatus(VehicleStatus.RELEASE.toValue());
+            entity = repository.save(entity);
+            return new VehicleResponsePayload(entity);
+        }
+        return null;
+    }
+
 }

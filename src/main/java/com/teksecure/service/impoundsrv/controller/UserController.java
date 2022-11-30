@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPERUSER')")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
@@ -101,7 +101,7 @@ public class UserController {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleRepository.findByName(Erole.ROLE_USER)
+            Role userRole = roleRepository.findByName(Erole.ROLE_ADMIN)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
             roles.add(userRole);
         }
@@ -113,10 +113,15 @@ public class UserController {
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
                         roles.add(adminRole);
                         break;
-                    default:
-                        Role userRole = roleRepository.findByName(Erole.ROLE_USER)
+                    case "exit_operator":
+                        Role exitOperatorRole = roleRepository.findByName(Erole.ROLE_EXIT_OPERATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
-                        roles.add(userRole);
+                        roles.add(exitOperatorRole);
+                        break;
+//                    default:
+//                        Role userRole = roleRepository.findByName(Erole.ROLE_USER)
+//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+//                        roles.add(userRole);
                 }
             });
         }

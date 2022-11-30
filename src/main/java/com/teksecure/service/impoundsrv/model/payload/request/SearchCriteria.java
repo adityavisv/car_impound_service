@@ -30,4 +30,6 @@ public class SearchCriteria {
     private String releaseFirstname;
     private String releaseLastname;
     private String ownerNationality;
+    private Date estimatedReleaseDate;
+    private String remarksKeyword;
 }

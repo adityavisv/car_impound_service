@@ -3,7 +3,6 @@ package com.teksecure.service.impoundsrv.controller;
 import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
-import com.teksecure.service.impoundsrv.model.payload.response.GenericResponse;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;

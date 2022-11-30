@@ -7,6 +7,7 @@ import com.teksecure.service.impoundsrv.model.entity.ReleaseIdentityEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.type.Department;
 import com.teksecure.service.impoundsrv.model.type.Emirate;
+import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
 import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,11 @@ public class VehicleResponsePayload {
         if (entity.getDepartment() != null)
             this.department = Department.valueOf(entity.getDepartment());
         this.images = new ArrayList<>();
+        this.vehicleStatus = VehicleStatus.valueOf(entity.getVehicleStatus());
+        if (entity.getReleaseDocument() != null) {
+            byte[] bytes = entity.getReleaseDocument();
+            this.releaseDocument = Base64.getEncoder().encodeToString(bytes);
+        }
 
         if (entity.getImage1() != null) {
             byte[] bytes = entity.getImage1();
@@ -73,6 +79,9 @@ public class VehicleResponsePayload {
 
     @JsonProperty(value = "type")
     private VehicleType type;
+
+    @JsonProperty(value = "vehicleStatus")
+    private VehicleStatus vehicleStatus;
 
     @JsonProperty(value = "registrationDateTime", required = true)
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
@@ -120,4 +129,7 @@ public class VehicleResponsePayload {
 
     @JsonProperty(value ="releaseIdentity")
     private ReleaseIdentityEntity releaseIdentity;
+
+    @JsonProperty(value = "releaseDocument")
+    private String releaseDocument;
 }

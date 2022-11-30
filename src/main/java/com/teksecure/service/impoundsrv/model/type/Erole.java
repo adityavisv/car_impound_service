@@ -1,6 +1,7 @@
 package com.teksecure.service.impoundsrv.model.type;
 
 public enum Erole {
-    ROLE_USER,
+    ROLE_EXIT_OPERATOR,
+    ROLE_SUPERUSER,
     ROLE_ADMIN
 }
