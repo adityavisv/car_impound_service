@@ -26,6 +26,7 @@ public class VehicleEntity {
         this.emirate = payload.getEmirate().toValue();
         this.code = payload.getCode();
         this.registrationDateTime = payload.getRegistrationDateTime();
+        this.estimatedReleaseDate = payload.getEstimatedReleaseDate();
         this.caseNumber = payload.getCaseNumber();
         this.chassisNumber = payload.getChassisNumber();
         this.color = payload.getColor();
@@ -33,8 +34,9 @@ public class VehicleEntity {
         this.numberPlate = payload.getNumberPlate();
         this.owner = new OwnerEntity(payload.getOwner());
         this.image1 = this.image2  = this.image3 = this.image4 = this.image5 = null;
-        this.department = payload.getDepartment().toValue();
+        this.department = payload.getDepartment();
         this.vehicleStatus = VehicleStatus.REGISTERED.toValue();
+        this.remarks = payload.getRemarks();
     }
 
     @Id
@@ -90,6 +92,7 @@ public class VehicleEntity {
     @Column(name = "STATUS")
     private String vehicleStatus;
 
+
     @Column(name = "IS_WANTED")
     private Boolean isWanted;
 
@@ -97,25 +100,46 @@ public class VehicleEntity {
     @Lob
     private byte[] releaseDocument;
 
+    @Column(name = "RELEASE_DOCUMENT_TYPE")
+    private String releaseDocumentType;
+
     @Column(name = "IMAGE1")
     @Lob
     private byte[] image1;
+
+    @Column(name = "IMAGE_TYPE_1")
+    private String imageType1;
 
     @Column(name = "IMAGE2")
     @Lob
     private byte[] image2;
 
+    @Column(name = "IMAGE_TYPE_2")
+    private String imageType2;
+
     @Column(name = "IMAGE3")
     @Lob
     private byte[] image3;
+
+    @Column(name = "IMAGE_TYPE_3")
+    private String imageType3;
 
     @Column(name = "IMAGE4")
     @Lob
     private byte[] image4;
 
+    @Column(name = "IMAGE_TYPE_4")
+    private String imageType4;
+
     @Column(name = "IMAGE5")
     @Lob
     private byte[] image5;
+
+    @Column(name = "IMAGE_TYPE_5")
+    private String imageType5;
+
+    @Column(name = "REMARKS")
+    private String remarks;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "RELEASE_ID", referencedColumnName = "ID")
@@ -148,6 +172,7 @@ public class VehicleEntity {
     public void updateReleaseDocument(MultipartFile file) {
         try {
             this.releaseDocument = file.getBytes();
+            this.releaseDocumentType = file.getContentType();
         } catch (IOException ex) {
 
         }
@@ -158,14 +183,19 @@ public class VehicleEntity {
             switch(files.size()) {
                 case 5:
                     this.image5 = files.get(4).getBytes();
+                    this.imageType5 = files.get(4).getContentType();
                 case 4:
                     this.image4 = files.get(3).getBytes();
+                    this.imageType4 = files.get(4).getContentType();
                 case 3:
                     this.image3 = files.get(2).getBytes();
+                    this.imageType3 = files.get(2).getContentType();
                 case 2:
                     this.image2 = files.get(1).getBytes();
+                    this.imageType2 = files.get(1).getContentType();
                 case 1:
                     this.image1 = files.get(0).getBytes();
+                    this.imageType1 = files.get(0).getContentType();
                     break;
             }
         } catch (IOException ex) {

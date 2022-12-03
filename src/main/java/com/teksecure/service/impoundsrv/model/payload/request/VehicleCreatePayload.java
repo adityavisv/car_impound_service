@@ -2,7 +2,6 @@ package com.teksecure.service.impoundsrv.model.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.teksecure.service.impoundsrv.model.type.Department;
 import com.teksecure.service.impoundsrv.model.type.Emirate;
 import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
@@ -65,5 +64,8 @@ public class VehicleCreatePayload {
     private OwnerPayload owner;
 
     @JsonProperty(value = "department")
-    private Department department;
+    private String department;
+
+    @JsonProperty(value = "remarks")
+    private String remarks;
 }

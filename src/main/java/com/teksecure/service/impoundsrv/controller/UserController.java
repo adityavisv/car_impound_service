@@ -118,6 +118,10 @@ public class UserController {
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
                         roles.add(exitOperatorRole);
                         break;
+                    case "superuser":
+                        Role superUserRole = roleRepository.findByName(Erole.ROLE_SUPERUSER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        roles.add(superUserRole);
 //                    default:
 //                        Role userRole = roleRepository.findByName(Erole.ROLE_USER)
 //                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));

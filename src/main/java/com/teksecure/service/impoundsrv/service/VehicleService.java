@@ -88,6 +88,20 @@ public class VehicleService  {
             allVehicles = allVehicles.stream()
                     .filter(v -> v.getModel().equals(criteria.getModel())).collect(Collectors.toList());
 
+        if (criteria.getZoneLabel() != null) {
+            if (criteria.getSlot() != null) {
+                String slotNumber = String.format("%s%s", criteria.getZoneLabel(), criteria.getSlot());
+                allVehicles = allVehicles.stream()
+                        .filter(v -> (v.getParkingSlot() != null && v.getParkingSlot().contains(slotNumber)))
+                        .collect(Collectors.toList());
+            }
+            else {
+                allVehicles = allVehicles.stream()
+                        .filter(v -> (v.getParkingSlot() != null && v.getParkingSlot().startsWith(criteria.getZoneLabel())))
+                        .collect(Collectors.toList());
+            }
+        }
+
         if (criteria.getSlot() != null)
             allVehicles = allVehicles.stream()
                     .filter(v -> v.getParkingSlot().equals(criteria.getSlot())).collect(Collectors.toList());
@@ -162,6 +176,12 @@ public class VehicleService  {
             allVehicles = allVehicles.stream()
                     .filter(v -> v.getEstimatedReleaseDate().equals(criteria.getEstimatedReleaseDate()))
                     .collect(Collectors.toList());
+        if (criteria.getRemarksKeyword() != null) {
+            allVehicles = allVehicles.stream()
+                    .filter(v -> (v.getRemarks() != null &&
+                            v.getRemarks().contains(criteria.getRemarksKeyword())))
+                    .collect(Collectors.toList());
+        }
         List<VehicleResponsePayload> finalPayloadList = new ArrayList<>();
         for (VehicleEntity entity :allVehicles) {
             finalPayloadList.add(new VehicleResponsePayload(entity));

@@ -17,4 +17,7 @@ public interface VehicleRepository extends CrudRepository<VehicleEntity, Integer
 
     @Query(value = "SELECT * FROM VEHICLES V WHERE V.STATUS LIKE ':status'", nativeQuery = true)
     List<VehicleEntity> fetchAllVehiclesByStatus(String status);
+
+    @Query(value = "SELECT * FROM VEHICLES V WHERE V.STATUS = 'REGISTERED'", nativeQuery = true)
+    List<VehicleEntity> fetchAllRegisteredVehicles();
 }

@@ -27,13 +27,19 @@ CREATE TABLE `vehicles` (
                             `TYPE` varchar(50) DEFAULT NULL,
                             `RELEASE_DOCUMENT` longblob,
                             `STATUS` varchar(20) DEFAULT NULL,
+                            `IMAGE_TYPE_1` varchar(50) DEFAULT NULL,
+                            `IMAGE_TYPE_2` varchar(50) DEFAULT NULL,
+                            `IMAGE_TYPE_3` varchar(50) DEFAULT NULL,
+                            `IMAGE_TYPE_4` varchar(50) DEFAULT NULL,
+                            `IMAGE_TYPE_5` varchar(50) DEFAULT NULL,
+                            `RELEASE_DOCUMENT_TYPE` varchar(50) DEFAULT NULL,
+                            `REMARKS` text,
                             PRIMARY KEY (`ID`),
                             KEY `owner_fk` (`OWNER_ID`),
                             KEY `RELEASE_ID_FK` (`RELEASE_ID`),
                             CONSTRAINT `owner_fk` FOREIGN KEY (`OWNER_ID`) REFERENCES `owner` (`ID`),
                             CONSTRAINT `RELEASE_ID_FK` FOREIGN KEY (`RELEASE_ID`) REFERENCES `RELEASE_IDENTITY` (`id`)
 )
-
 
 CREATE TABLE `owner` (
                          `ID` int NOT NULL AUTO_INCREMENT,

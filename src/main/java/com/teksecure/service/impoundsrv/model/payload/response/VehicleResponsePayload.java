@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
 import com.teksecure.service.impoundsrv.model.entity.ReleaseIdentityEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
-import com.teksecure.service.impoundsrv.model.type.Department;
-import com.teksecure.service.impoundsrv.model.type.Emirate;
-import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
-import com.teksecure.service.impoundsrv.model.type.VehicleType;
+import com.teksecure.service.impoundsrv.model.type.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,30 +37,40 @@ public class VehicleResponsePayload {
         this.owner = entity.getOwner();
         this.releaseIdentity = entity.getReleaseIdentity();
         this.estimatedReleaseDate = entity.getEstimatedReleaseDate();
+        this.remarks = entity.getRemarks();
         if (entity.getDepartment() != null)
-            this.department = Department.valueOf(entity.getDepartment());
+            this.department = entity.getDepartment();
         this.images = new ArrayList<>();
         this.vehicleStatus = VehicleStatus.valueOf(entity.getVehicleStatus());
         if (entity.getReleaseDocument() != null) {
             byte[] bytes = entity.getReleaseDocument();
-            this.releaseDocument = Base64.getEncoder().encodeToString(bytes);
+            this.releaseDocument = new File(Base64.getEncoder().encodeToString(bytes), entity.getReleaseDocumentType());
         }
 
         if (entity.getImage1() != null) {
             byte[] bytes = entity.getImage1();
-            images.add(Base64.getEncoder().encodeToString(bytes));
+            File file = new File(Base64.getEncoder().encodeToString(bytes), entity.getImageType1());
+            images.add(file);
         }
         if (entity.getImage2() != null) {
-            images.add(Base64.getEncoder().encodeToString(entity.getImage2()));
+            byte[] bytes = entity.getImage2();
+            File file = new File(Base64.getEncoder().encodeToString(bytes), entity.getImageType2());
+            images.add(file);
         }
         if (entity.getImage3() != null) {
-            images.add(Base64.getEncoder().encodeToString(entity.getImage3()));
+            byte[] bytes = entity.getImage3();
+            File file = new File(Base64.getEncoder().encodeToString(bytes), entity.getImageType3());
+            images.add(file);
         }
         if (entity.getImage4() != null) {
-            images.add(Base64.getEncoder().encodeToString(entity.getImage4()));
+            byte[] bytes = entity.getImage4();
+            File file = new File(Base64.getEncoder().encodeToString(bytes), entity.getImageType4());
+            images.add(file);
         }
         if (entity.getImage5() != null) {
-            images.add(Base64.getEncoder().encodeToString(entity.getImage5()));
+            byte[] bytes = entity.getImage5();
+            File file = new File(Base64.getEncoder().encodeToString(bytes), entity.getImageType5());
+            images.add(file);
         }
 
     }
@@ -113,7 +120,7 @@ public class VehicleResponsePayload {
     private OwnerEntity owner;
 
     @JsonProperty(value = "department")
-    private Department department;
+    private String department;
 
     @JsonProperty(value = "emirate")
     private Emirate emirate;
@@ -125,11 +132,14 @@ public class VehicleResponsePayload {
     private String code;
 
     @JsonProperty(value = "images")
-    private List<String> images;
+    private List<File> images;
 
     @JsonProperty(value ="releaseIdentity")
     private ReleaseIdentityEntity releaseIdentity;
 
     @JsonProperty(value = "releaseDocument")
-    private String releaseDocument;
+    private File releaseDocument;
+
+    @JsonProperty(value = "remarks")
+    private String remarks;
 }

@@ -32,4 +32,5 @@ public class SearchCriteria {
     private String ownerNationality;
     private Date estimatedReleaseDate;
     private String remarksKeyword;
+    private String zoneLabel;
 }

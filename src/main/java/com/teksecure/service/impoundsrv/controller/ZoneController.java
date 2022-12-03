@@ -5,6 +5,7 @@ import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPay
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
+import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
 import com.teksecure.service.impoundsrv.service.ParkingZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ public class ZoneController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
     public ResponseEntity<ParkingSpotListPayload> retrieveZone(
             @RequestParam(required = false) String zone,
             @RequestParam(required = false) String occupiedStatus) {
@@ -38,7 +40,7 @@ public class ZoneController {
         return new ResponseEntity<>(responsePayload, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
     @GetMapping(value="/parkingSpot")
     public ResponseEntity<ParkingSpotEntity> retrieveParkingSpotBySlotNum(@RequestParam String zone,
                                                                           @RequestParam Integer slotNumber) {
@@ -52,7 +54,7 @@ public class ZoneController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPERUSER') OR hasRole('ADMIN')")
     @GetMapping(value="/summary")
     public ResponseEntity<ParkingZoneListSummary> retrieveParkingZoneSummaries(
             @RequestParam(required = false) Optional<String> zone) {
@@ -61,7 +63,7 @@ public class ZoneController {
         return new ResponseEntity<>(summaries, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPERUSER') OR hasRole('ADMIN')")
     @PutMapping(value="/assign")
     public ResponseEntity<ParkingSpotListPayload> assignCarToParking(
             @RequestParam("spot") List<String> parkingSpots,
@@ -70,7 +72,7 @@ public class ZoneController {
         return new ResponseEntity<>(savedPayloads, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPERUSER') OR hasRole('ADMIN')")
     @PutMapping(value = "/release")
     public ResponseEntity<VehicleResponsePayload> releaseCar(
             @RequestParam String zone,
@@ -88,4 +90,16 @@ public class ZoneController {
             , HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
+    @GetMapping(value="/upcomingreleases")
+    public ResponseEntity<VehicleListPayload> getUpcomingReleases(
+            @RequestParam(required = false) Date startDate,
+            @RequestParam(required = false) Date endDate) {
+
+        VehicleListPayload upcomingReleaseVehicles = service.getUpcomingReleases(startDate, endDate);
+        return new ResponseEntity<>(upcomingReleaseVehicles, HttpStatus.OK);
+
+    }
+
 }

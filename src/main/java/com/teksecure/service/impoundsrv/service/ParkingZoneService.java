@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -145,5 +146,26 @@ public class ParkingZoneService {
             }
         }
         return vehicleResponsePayload;
+    }
+
+    public VehicleListPayload getUpcomingReleases(Date startDate, Date endDate) {
+        List<VehicleEntity> allRegisteredVehicles = vehicleRepository.fetchAllRegisteredVehicles();
+        if (startDate != null) {
+            allRegisteredVehicles = allRegisteredVehicles.stream()
+                    .filter(v -> (v.getEstimatedReleaseDate().equals(startDate) || v.getEstimatedReleaseDate().after(startDate)))
+                    .collect(Collectors.toList());
+
+        }
+        if (endDate != null) {
+            allRegisteredVehicles = allRegisteredVehicles.stream()
+                    .filter(v -> (v.getEstimatedReleaseDate().equals(endDate) || v.getEstimatedReleaseDate().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+
+        List<VehicleResponsePayload> payloadList = new ArrayList<>();
+        for (VehicleEntity vehicle : allRegisteredVehicles) {
+            payloadList.add(new VehicleResponsePayload(vehicle));
+        }
+        return new VehicleListPayload(payloadList);
     }
 }
