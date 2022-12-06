@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,11 +92,9 @@ public class ZoneController {
 
     @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
     @GetMapping(value="/upcomingreleases")
-    public ResponseEntity<VehicleListPayload> getUpcomingReleases(
-            @RequestParam(required = false) Date startDate,
-            @RequestParam(required = false) Date endDate) {
+    public ResponseEntity<VehicleListPayload> getUpcomingReleases() {
 
-        VehicleListPayload upcomingReleaseVehicles = service.getUpcomingReleases(startDate, endDate);
+        VehicleListPayload upcomingReleaseVehicles = service.getUpcomingReleases();
         return new ResponseEntity<>(upcomingReleaseVehicles, HttpStatus.OK);
 
     }

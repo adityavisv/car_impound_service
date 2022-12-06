@@ -148,19 +148,8 @@ public class ParkingZoneService {
         return vehicleResponsePayload;
     }
 
-    public VehicleListPayload getUpcomingReleases(Date startDate, Date endDate) {
-        List<VehicleEntity> allRegisteredVehicles = vehicleRepository.fetchAllRegisteredVehicles();
-        if (startDate != null) {
-            allRegisteredVehicles = allRegisteredVehicles.stream()
-                    .filter(v -> (v.getEstimatedReleaseDate().equals(startDate) || v.getEstimatedReleaseDate().after(startDate)))
-                    .collect(Collectors.toList());
-
-        }
-        if (endDate != null) {
-            allRegisteredVehicles = allRegisteredVehicles.stream()
-                    .filter(v -> (v.getEstimatedReleaseDate().equals(endDate) || v.getEstimatedReleaseDate().before(endDate)))
-                    .collect(Collectors.toList());
-        }
+    public VehicleListPayload getUpcomingReleases() {
+        List<VehicleEntity> allRegisteredVehicles = vehicleRepository.fetchUpcomingReleasesVehicles();
 
         List<VehicleResponsePayload> payloadList = new ArrayList<>();
         for (VehicleEntity vehicle : allRegisteredVehicles) {
