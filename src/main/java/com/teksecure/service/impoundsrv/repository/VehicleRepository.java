@@ -21,6 +21,6 @@ public interface VehicleRepository extends CrudRepository<VehicleEntity, Integer
     @Query(value = "SELECT * FROM VEHICLES V WHERE V.STATUS = 'REGISTERED'", nativeQuery = true)
     List<VehicleEntity> fetchAllRegisteredVehicles();
 
-    @Query(value = "SELECT * FROM VEHICLES V WHERE V.STATUS = 'REGISTERED' AND V.RELEASE_DT IS NOT NULL AND V.RELEASE_DT >= CURDATE() AND V.RELEASE_DT < CURDATE() + INTERVAL 2 DAY")
+    @Query(value = "SELECT * FROM VEHICLES V WHERE V.STATUS = 'REGISTERED' AND V.RELEASE_DT IS NOT NULL AND V.RELEASE_DT >= CURDATE() AND V.RELEASE_DT < CURDATE() + INTERVAL 2 DAY", nativeQuery = true)
     List<VehicleEntity> fetchUpcomingReleasesVehicles();
 }

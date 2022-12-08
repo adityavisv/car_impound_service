@@ -38,7 +38,7 @@ CREATE TABLE `vehicles` (
                             KEY `owner_fk` (`OWNER_ID`),
                             KEY `RELEASE_ID_FK` (`RELEASE_ID`),
                             CONSTRAINT `owner_fk` FOREIGN KEY (`OWNER_ID`) REFERENCES `owner` (`ID`),
-                            CONSTRAINT `RELEASE_ID_FK` FOREIGN KEY (`RELEASE_ID`) REFERENCES `RELEASE_IDENTITY` (`id`)
+                            CONSTRAINT `RELEASE_ID_FK` FOREIGN KEY (`RELEASE_ID`) REFERENCES `release_identity` (`id`)
 )
 
 CREATE TABLE `owner` (

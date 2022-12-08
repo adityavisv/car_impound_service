@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum OwnerIdType {
+    NONE(""),
     PASSPORT("Passport"),
     EMIRATES_ID("Emirates ID"),
     NATIONAL_ID("National ID"),

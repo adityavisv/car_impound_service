@@ -33,4 +33,5 @@ public class SearchCriteria {
     private Date estimatedReleaseDate;
     private String remarksKeyword;
     private String zoneLabel;
+    private String status;
 }

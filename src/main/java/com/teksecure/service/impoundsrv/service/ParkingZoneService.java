@@ -133,7 +133,7 @@ public class ParkingZoneService {
 
             vehicle.setParkingSlot(null);
             vehicle.setReleaseIdentity(new ReleaseIdentityEntity(releaseIdentityPayload));
-            vehicle.setVehicleStatus(VehicleStatus.PRE_RELEASE.toValue());
+            vehicle.setVehicleStatus(VehicleStatus.APPROVED_FOR_RELEASE.toValue());
             vehicleResponsePayload = new VehicleResponsePayload(vehicleRepository.save(vehicle));
 
             for (String slot : parkingSlots) {

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum VehicleStatus {
     REGISTERED("REGISTERED"),
-    PRE_RELEASE("PRE_RELEASE"),
-    RELEASE("RELEASE");
+    APPROVED_FOR_RELEASE("APPROVED_FOR_RELEASE"),
+    RELEASED("RELEASED");
 
     private final String text;
 

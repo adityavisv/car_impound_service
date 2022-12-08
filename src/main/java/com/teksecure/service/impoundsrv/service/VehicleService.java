@@ -182,6 +182,11 @@ public class VehicleService  {
                             v.getRemarks().contains(criteria.getRemarksKeyword())))
                     .collect(Collectors.toList());
         }
+        if (criteria.getStatus() != null) {
+            allVehicles = allVehicles.stream()
+                    .filter(v -> v.getVehicleStatus().equals(criteria.getStatus()))
+                    .collect(Collectors.toList());
+        }
         List<VehicleResponsePayload> finalPayloadList = new ArrayList<>();
         for (VehicleEntity entity :allVehicles) {
             finalPayloadList.add(new VehicleResponsePayload(entity));
@@ -192,7 +197,7 @@ public class VehicleService  {
     public VehicleListPayload retrieveReleaseQueue() {
         List<VehicleEntity> allVehicles = repository.fetchAllVehicles();
         List<VehicleEntity> vehiclesInReleaseStatus =
-                allVehicles.stream().filter(v -> v.getVehicleStatus().equals(VehicleStatus.PRE_RELEASE.toValue()))
+                allVehicles.stream().filter(v -> v.getVehicleStatus().equals(VehicleStatus.APPROVED_FOR_RELEASE.toValue()))
                         .collect(Collectors.toList());
         List<VehicleResponsePayload> payloadList = new ArrayList<>();
         for (VehicleEntity entity : vehiclesInReleaseStatus) {
@@ -203,8 +208,8 @@ public class VehicleService  {
 
     public VehicleResponsePayload doFinalRelease(Integer vehicleId) {
         VehicleEntity entity = repository.findById(vehicleId).orElse(null);
-        if (entity.getVehicleStatus().equals(VehicleStatus.PRE_RELEASE.toValue())) {
-            entity.setVehicleStatus(VehicleStatus.RELEASE.toValue());
+        if (entity.getVehicleStatus().equals(VehicleStatus.APPROVED_FOR_RELEASE.toValue())) {
+            entity.setVehicleStatus(VehicleStatus.RELEASED.toValue());
             entity = repository.save(entity);
             return new VehicleResponsePayload(entity);
         }
