@@ -1,4 +1,4 @@
-CREATE TABLE `vehicles` (
+CREATE TABLE `VEHICLES` (
                             `ID` int NOT NULL AUTO_INCREMENT,
                             `MAKE` varchar(100) DEFAULT NULL,
                             `MODEL` varchar(100) DEFAULT NULL,
@@ -37,11 +37,11 @@ CREATE TABLE `vehicles` (
                             PRIMARY KEY (`ID`),
                             KEY `owner_fk` (`OWNER_ID`),
                             KEY `RELEASE_ID_FK` (`RELEASE_ID`),
-                            CONSTRAINT `owner_fk` FOREIGN KEY (`OWNER_ID`) REFERENCES `owner` (`ID`),
-                            CONSTRAINT `RELEASE_ID_FK` FOREIGN KEY (`RELEASE_ID`) REFERENCES `release_identity` (`id`)
+                            CONSTRAINT `owner_fk` FOREIGN KEY (`OWNER_ID`) REFERENCES `OWNER` (`ID`),
+                            CONSTRAINT `RELEASE_ID_FK` FOREIGN KEY (`RELEASE_ID`) REFERENCES `RELEASE_IDENTITY` (`id`)
 )
 
-CREATE TABLE `owner` (
+CREATE TABLE `OWNER` (
                          `ID` int NOT NULL AUTO_INCREMENT,
                          `ID_TYPE` varchar(30) DEFAULT NULL,
                          `FIRST_NAME` varchar(50) DEFAULT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE `owner` (
                          PRIMARY KEY (`ID`)
 );
 
-CREATE TABLE `parking_zone` (
+CREATE TABLE `PARKING_ZONE` (
                                 `ZONE_LABEL` varchar(2) DEFAULT NULL,
                                 `SLOT_NUM` int DEFAULT NULL,
                                 `OC_STATUS` varchar(20) DEFAULT NULL,
@@ -61,10 +61,10 @@ CREATE TABLE `parking_zone` (
                                 `ID` int NOT NULL AUTO_INCREMENT,
                                 PRIMARY KEY (`ID`),
                                 KEY `vehicle_id_fk` (`VEHICLE_ID`),
-                                CONSTRAINT `vehicle_id_fk` FOREIGN KEY (`VEHICLE_ID`) REFERENCES `vehicles` (`ID`)
+                                CONSTRAINT `vehicle_id_fk` FOREIGN KEY (`VEHICLE_ID`) REFERENCES `VEHICLES` (`ID`)
 )
 
-CREATE TABLE `release_identity` (
+CREATE TABLE `RELEASE_IDENTITY` (
                                     `id` int NOT NULL AUTO_INCREMENT,
                                     `id_type` varchar(30) DEFAULT NULL,
                                     `first_name` varchar(50) DEFAULT NULL,
@@ -77,19 +77,19 @@ CREATE TABLE `release_identity` (
                                     PRIMARY KEY (`id`)
 )
 
-CREATE TABLE `user_roles` (
+CREATE TABLE `USER_ROLES` (
                               `user_id` bigint NOT NULL,
                               `role_id` int NOT NULL,
                               PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `roles` (
+CREATE TABLE `ROLES` (
                          `id` int NOT NULL AUTO_INCREMENT,
                          `name` varchar(20) DEFAULT NULL,
                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `users` (
+CREATE TABLE `USERS` (
                          `id` bigint NOT NULL AUTO_INCREMENT,
                          `email` varchar(50) DEFAULT NULL,
                          `password` varchar(120) DEFAULT NULL,

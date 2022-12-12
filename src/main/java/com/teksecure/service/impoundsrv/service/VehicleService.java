@@ -82,11 +82,11 @@ public class VehicleService  {
         List<VehicleEntity> allVehicles = repository.fetchAllVehicles();
         if (criteria.getMake()  != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getMake().equals(criteria.getMake())).collect(Collectors.toList());
+                    .filter(v -> v.getMake().contains(criteria.getMake())).collect(Collectors.toList());
 
         if (criteria.getModel() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getModel().equals(criteria.getModel())).collect(Collectors.toList());
+                    .filter(v -> v.getModel().contains(criteria.getModel())).collect(Collectors.toList());
 
         if (criteria.getZoneLabel() != null) {
             if (criteria.getSlot() != null) {
@@ -104,14 +104,14 @@ public class VehicleService  {
 
         if (criteria.getSlot() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getParkingSlot().equals(criteria.getSlot())).collect(Collectors.toList());
+                    .filter(v -> v.getParkingSlot().contains(criteria.getSlot())).collect(Collectors.toList());
         if (criteria.getColor() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getColor().equals(criteria.getColor()))
+                    .filter(v -> v.getColor().contains(criteria.getColor()))
                     .collect(Collectors.toList());
         if (criteria.getNumberPlate() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getNumberPlate().equals(criteria.getNumberPlate()))
+                    .filter(v -> (v.getNumberPlate() != null & v.getNumberPlate().contains(criteria.getNumberPlate())))
                     .collect(Collectors.toList());
         if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
             Date startDate = criteria.getStartDate();
@@ -122,15 +122,15 @@ public class VehicleService  {
         }
         if (criteria.getOwnerFirstname() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getOwner().getFirstName().equals(criteria.getOwnerFirstname()))
+                    .filter(v -> (v.getOwner() != null && v.getOwner().getFirstName() != null && v.getOwner().getFirstName().contains(criteria.getOwnerFirstname())))
                     .collect(Collectors.toList());
         if (criteria.getOwnerLastname() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getOwner().getLastName().equals(criteria.getOwnerLastname()))
+                    .filter(v -> (v.getOwner() != null && v.getOwner().getLastName() != null && v.getOwner().getLastName().equals(criteria.getOwnerLastname())))
                     .collect(Collectors.toList());
         if (criteria.getCaseNumber() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getCaseNumber().equals(criteria.getCaseNumber()))
+                    .filter(v -> (v.getCaseNumber() != null && v.getCaseNumber().contains(criteria.getCaseNumber())))
                     .collect(Collectors.toList());
         if (criteria.getIsWanted() != null)
             allVehicles = allVehicles.stream()
@@ -138,7 +138,7 @@ public class VehicleService  {
                     .collect(Collectors.toList());
         if (criteria.getChassisNumber() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getChassisNumber().equals(criteria.getChassisNumber()))
+                    .filter(v -> (v.getChassisNumber() != null && v.getChassisNumber().contains(criteria.getChassisNumber())))
                     .collect(Collectors.toList());
         if (criteria.getType() != null)
             allVehicles = allVehicles.stream()
@@ -146,15 +146,15 @@ public class VehicleService  {
                     .collect(Collectors.toList());
         if (criteria.getEmirate() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getEmirate().equals(criteria.getEmirate()))
+                    .filter(v -> (v.getEmirate() != null && v.getEmirate().equals(criteria.getEmirate())))
                     .collect(Collectors.toList());
         if (criteria.getCategory() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getCategory().equals(criteria.getCategory()))
+                    .filter(v -> (v.getCategory() != null && v.getCategory().contains(criteria.getCategory())))
                     .collect(Collectors.toList());
         if (criteria.getCode() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getCode().equals(criteria.getCode()))
+                    .filter(v -> (v.getCode() != null && v.getCode().contains(criteria.getCode())))
                     .collect(Collectors.toList());
         if (criteria.getReleaseDate() != null)
             allVehicles = allVehicles.stream()
@@ -162,15 +162,15 @@ public class VehicleService  {
                     .collect(Collectors.toList());
         if (criteria.getReleaseFirstname() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getReleaseIdentity().getFirstName().equals(criteria.getReleaseFirstname()))
+                    .filter(v -> (v.getReleaseIdentity() != null && v.getReleaseIdentity().getFirstName() != null && v.getReleaseIdentity().getFirstName().equals(criteria.getReleaseFirstname())))
                     .collect(Collectors.toList());
         if (criteria.getReleaseLastname() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getReleaseIdentity().getLastName().equals(criteria.getReleaseLastname()))
+                    .filter(v -> (v.getReleaseIdentity() != null && v.getReleaseIdentity().getLastName() != null && v.getReleaseIdentity().getLastName().equals(criteria.getReleaseLastname())))
                     .collect(Collectors.toList());
         if (criteria.getOwnerNationality() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> v.getOwner().getNationality().equals(criteria.getOwnerNationality()))
+                    .filter(v -> (v.getOwner() != null && v.getOwner().getNationality() != null &&  v.getOwner().getNationality().equals(criteria.getOwnerNationality())))
                     .collect(Collectors.toList());
         if (criteria.getEstimatedReleaseDate() != null)
             allVehicles = allVehicles.stream()

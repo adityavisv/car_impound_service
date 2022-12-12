@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface ZoneRepository extends CrudRepository<ParkingSpotEntity, Integer> {
 
-    @Query(value = "SELECT * FROM PARKING_ZONE P WHERE P.ZONE_LABEL = :zone", nativeQuery = true)
+    @Query(value = "SELECT * FROM parking_zone P WHERE P.ZONE_LABEL = :zone", nativeQuery = true)
     public List<ParkingSpotEntity> retrieveParkingByZone(@Param("zone") String zone);
 
-    @Query(value = "SELECT * FROM PARKING_ZONE P WHERE P.OC_STATUS = :status", nativeQuery = true)
+    @Query(value = "SELECT * FROM parking_zone P WHERE P.OC_STATUS = :status", nativeQuery = true)
     public List<ParkingSpotEntity> retrieveParkingByOccupiedStatus(@Param("status") String status);
 
-    @Query(value = "SELECT * FROM PARKING_ZONE P WHERE P.ZONE_LABEL = :zone AND P.SLOT_NUM = :slotNumber", nativeQuery = true)
+    @Query(value = "SELECT * FROM parking_zone P WHERE P.ZONE_LABEL = :zone AND P.SLOT_NUM = :slotNumber", nativeQuery = true)
     public ParkingSpotEntity retrieveParkingSpotBySlotIdentifier(@Param("zone") String zone, @Param("slotNumber") Integer slotNumber);
 }

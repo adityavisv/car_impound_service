@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "PARKING_ZONE")
+@Table(name = "parking_zone")
 @Getter @Setter @NoArgsConstructor
 public class ParkingSpotEntity {
     @Id
