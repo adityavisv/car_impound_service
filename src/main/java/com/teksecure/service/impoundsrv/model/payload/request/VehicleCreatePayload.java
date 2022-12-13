@@ -7,7 +7,6 @@ import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -36,16 +35,16 @@ public class VehicleCreatePayload {
     @JsonProperty(value = "caseNumber", required = false)
     private String caseNumber;
 
-    @JsonProperty(value = "chassisNumber", required = true)
+    @JsonProperty(value = "chassisNumber", required = false)
     private String chassisNumber;
 
-    @JsonProperty(value = "emirate", required = true)
+    @JsonProperty(value = "emirate", required = false)
     private Emirate emirate;
 
-    @JsonProperty(value = "category", required = true)
+    @JsonProperty(value = "category", required = false)
     private String category;
 
-    @JsonProperty(value = "code", required = true)
+    @JsonProperty(value = "code", required = false)
     private String code;
 
     @JsonProperty(value = "color", required = true)
@@ -57,13 +56,13 @@ public class VehicleCreatePayload {
     @JsonProperty(value = "isWanted", required = true)
     private Boolean isWanted;
 
-    @JsonProperty(value = "numberPlate")
+    @JsonProperty(value = "numberPlate", required = false)
     private String numberPlate;
 
     @JsonProperty(value = "owner")
     private OwnerPayload owner;
 
-    @JsonProperty(value = "department")
+    @JsonProperty(value = "department", required = true)
     private String department;
 
     @JsonProperty(value = "remarks")

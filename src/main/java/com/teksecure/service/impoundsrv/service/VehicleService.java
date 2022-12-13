@@ -7,7 +7,6 @@ import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePaylo
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
 import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
-import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -162,15 +161,15 @@ public class VehicleService  {
                     .collect(Collectors.toList());
         if (criteria.getReleaseFirstname() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> (v.getReleaseIdentity() != null && v.getReleaseIdentity().getFirstName() != null && v.getReleaseIdentity().getFirstName().equals(criteria.getReleaseFirstname())))
+                    .filter(v -> (v.getReleaseIdentity() != null && v.getReleaseIdentity().getFirstName() != null && v.getReleaseIdentity().getFirstName().contains(criteria.getReleaseFirstname())))
                     .collect(Collectors.toList());
         if (criteria.getReleaseLastname() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> (v.getReleaseIdentity() != null && v.getReleaseIdentity().getLastName() != null && v.getReleaseIdentity().getLastName().equals(criteria.getReleaseLastname())))
+                    .filter(v -> (v.getReleaseIdentity() != null && v.getReleaseIdentity().getLastName() != null && v.getReleaseIdentity().getLastName().contains(criteria.getReleaseLastname())))
                     .collect(Collectors.toList());
         if (criteria.getOwnerNationality() != null)
             allVehicles = allVehicles.stream()
-                    .filter(v -> (v.getOwner() != null && v.getOwner().getNationality() != null &&  v.getOwner().getNationality().equals(criteria.getOwnerNationality())))
+                    .filter(v -> (v.getOwner() != null && v.getOwner().getNationality() != null &&  v.getOwner().getNationality().contains(criteria.getOwnerNationality())))
                     .collect(Collectors.toList());
         if (criteria.getEstimatedReleaseDate() != null)
             allVehicles = allVehicles.stream()
