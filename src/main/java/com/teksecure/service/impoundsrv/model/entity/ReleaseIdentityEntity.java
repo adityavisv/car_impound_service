@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "release_identity")
@@ -23,7 +24,10 @@ public class ReleaseIdentityEntity {
         this.contactNumber = payload.getContactNumber();
         this.emailAddress = payload.getEmailAddress();
         this.nationality = payload.getNationality();
-        this.releaseDateTime = new Date();
+        this.releaseDateTime = LocalDateTime.now(ZoneId.of("Asia/Dubai"));
+        if (payload.getReleaseDocumentNumber() != null) {
+            this.releaseDocumentNumber = payload.getReleaseDocumentNumber();
+        }
     }
 
     @Id
@@ -51,7 +55,10 @@ public class ReleaseIdentityEntity {
     @Column(name = "NATIONALITY")
     private String nationality;
 
+    @Column(name = "RELEASE_DOC_NUM")
+    private String releaseDocumentNumber;
+
     @Column(name = "RELEASE_DT_TM")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
-    private Date releaseDateTime;
+    private LocalDateTime releaseDateTime;
 }

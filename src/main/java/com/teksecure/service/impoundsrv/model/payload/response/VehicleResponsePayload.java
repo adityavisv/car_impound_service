@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
 import com.teksecure.service.impoundsrv.model.entity.ReleaseIdentityEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
-import com.teksecure.service.impoundsrv.model.type.*;
+import com.teksecure.service.impoundsrv.model.type.File;
+import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor
@@ -23,11 +25,10 @@ public class VehicleResponsePayload {
         this.make = entity.getMake();
         this.model = entity.getModel();
         this.color = entity.getColor();
-        this.type = VehicleType.valueOf(entity.getType());
-        this.registrationDateTime = entity.getRegistrationDateTime();
+        this.type = entity.getType();
         this.registrationDateTime = entity.getRegistrationDateTime();
         this.isWanted = entity.getIsWanted();
-        this.emirate = Emirate.valueOf(entity.getEmirate());
+        this.emirate = entity.getEmirate();
         this.category = entity.getCategory();
         this.code = entity.getCode();
         this.caseNumber = entity.getCaseNumber();
@@ -85,18 +86,18 @@ public class VehicleResponsePayload {
     private String model;
 
     @JsonProperty(value = "type")
-    private VehicleType type;
+    private String type;
 
     @JsonProperty(value = "vehicleStatus")
     private VehicleStatus vehicleStatus;
 
     @JsonProperty(value = "registrationDateTime", required = true)
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
-    private Date registrationDateTime;
+    private LocalDateTime registrationDateTime;
 
     @JsonProperty(value = "estimatedReleaseDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date estimatedReleaseDate;
+    private LocalDate estimatedReleaseDate;
 
     @JsonProperty(value = "caseNumber", required = true)
     private String caseNumber;
@@ -123,7 +124,7 @@ public class VehicleResponsePayload {
     private String department;
 
     @JsonProperty(value = "emirate")
-    private Emirate emirate;
+    private String emirate;
 
     @JsonProperty(value = "category")
     private String category;

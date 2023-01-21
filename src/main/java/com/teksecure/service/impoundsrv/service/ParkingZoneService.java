@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,7 +131,6 @@ public class ParkingZoneService {
             VehicleEntity vehicle = occupiedParkingSpot.getOccupiedVehicle();
             String[] parkingSlots = vehicle.getParkingSlot().split(",");
 
-            vehicle.setParkingSlot(null);
             vehicle.setReleaseIdentity(new ReleaseIdentityEntity(releaseIdentityPayload));
             vehicle.setVehicleStatus(VehicleStatus.APPROVED_FOR_RELEASE.toValue());
             vehicleResponsePayload = new VehicleResponsePayload(vehicleRepository.save(vehicle));
@@ -148,13 +147,59 @@ public class ParkingZoneService {
         return vehicleResponsePayload;
     }
 
-    public VehicleListPayload getUpcomingReleases() {
-        List<VehicleEntity> allRegisteredVehicles = vehicleRepository.fetchUpcomingReleasesVehicles();
+    public UpcomingReleaseResponse getUpcomingReleases() {
+        List<VehicleEntity> allRegisteredVehicles = vehicleRepository.fetchAllRegisteredVehicles();
 
-        List<VehicleResponsePayload> payloadList = new ArrayList<>();
-        for (VehicleEntity vehicle : allRegisteredVehicles) {
-            payloadList.add(new VehicleResponsePayload(vehicle));
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+        LocalDate dayAfterTomorrow = today.plusDays(2);
+
+        List<VehicleEntity> upcomingReleaseEntities = allRegisteredVehicles.stream()
+                .filter(v -> (v.getEstimatedReleaseDate() != null && v.getEstimatedReleaseDate().isAfter(yesterday) &&
+                        v.getEstimatedReleaseDate().isBefore(dayAfterTomorrow)))
+                .collect(Collectors.toList());
+
+        List<VehicleEntity> missedReleaseEntities = allRegisteredVehicles.stream()
+                .filter(v -> (v.getEstimatedReleaseDate() != null && v.getEstimatedReleaseDate().isBefore(today)))
+                .collect(Collectors.toList());
+
+        UpcomingReleaseResponse response = new UpcomingReleaseResponse(upcomingReleaseEntities, missedReleaseEntities);
+        return response;
+    }
+
+    public VehicleResponsePayload reassignVehicle(Integer vehicleId, String zoneLabel, List<Integer> slotNumbers) {
+        VehicleEntity vehicle = vehicleRepository.findById(vehicleId).orElse(null);
+
+
+        if (vehicle != null) {
+            String parkingSlot = vehicle.getParkingSlot();
+//            if (slotNumbers.size() > 1) {
+                String[] oldSlots = parkingSlot.split(",");
+                for (String oldSlot : oldSlots) {
+                    String oldSlotZone = oldSlot.substring(0, 1);
+                    Integer oldSlotNumber = Integer.parseInt(oldSlot.substring(1));
+                    ParkingSpotEntity matchParkingSpotEntity = repository.retrieveParkingSpotBySlotIdentifier(oldSlotZone, oldSlotNumber);
+                    matchParkingSpotEntity.setOccupiedVehicle(null);
+                    matchParkingSpotEntity.setOccupancyStatus(AVAILABLE);
+                    repository.save(matchParkingSpotEntity);
+                }
+
+                for (Integer newSlotNumber : slotNumbers) {
+                    ParkingSpotEntity matchParkingSpotEntity = repository.retrieveParkingSpotBySlotIdentifier(zoneLabel, newSlotNumber);
+                    matchParkingSpotEntity.setOccupiedVehicle(vehicle);
+                    matchParkingSpotEntity.setOccupancyStatus(OCCUPIED);
+                    repository.save(matchParkingSpotEntity);
+                }
+//            }
+
+            List<String> newSlotNumberStrings = new ArrayList<>();
+            for (Integer newSlotNum : slotNumbers) {
+                newSlotNumberStrings.add(zoneLabel + newSlotNum);
+            }
+            String newSlotJoinedString = String.join(",", newSlotNumberStrings);
+            vehicle.setParkingSlot(newSlotJoinedString);
+            vehicleRepository.save(vehicle);
         }
-        return new VehicleListPayload(payloadList);
+        return new VehicleResponsePayload(vehicle);
     }
 }

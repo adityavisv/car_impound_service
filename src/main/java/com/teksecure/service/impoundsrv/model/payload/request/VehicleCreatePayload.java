@@ -8,12 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter @Setter @NoArgsConstructor
 public class VehicleCreatePayload {
-    @JsonProperty(value = "id")
-    private Integer id;
 
     @JsonProperty(value = "make", required = true)
     private String make;
@@ -22,15 +20,14 @@ public class VehicleCreatePayload {
     private String model;
 
     @JsonProperty(value = "type", required = true)
-    private VehicleType type;
+    private String type;
 
     @JsonProperty(value = "registrationDateTime", required = true)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm")
-    private Date registrationDateTime;
+    private String registrationDateTime;
 
     @JsonProperty(value = "estimatedReleaseDate", required = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
-    private Date estimatedReleaseDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate estimatedReleaseDate;
 
     @JsonProperty(value = "caseNumber", required = false)
     private String caseNumber;
@@ -39,7 +36,7 @@ public class VehicleCreatePayload {
     private String chassisNumber;
 
     @JsonProperty(value = "emirate", required = false)
-    private Emirate emirate;
+    private String emirate;
 
     @JsonProperty(value = "category", required = false)
     private String category;

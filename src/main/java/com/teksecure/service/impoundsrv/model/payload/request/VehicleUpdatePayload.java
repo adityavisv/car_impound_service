@@ -2,13 +2,11 @@ package com.teksecure.service.impoundsrv.model.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.teksecure.service.impoundsrv.model.entity.OwnerEntity;
-import com.teksecure.service.impoundsrv.model.type.VehicleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter @Setter @NoArgsConstructor
 public class VehicleUpdatePayload {
@@ -20,15 +18,14 @@ public class VehicleUpdatePayload {
     private String model;
 
     @JsonProperty(value = "type")
-    private VehicleType type;
+    private String type;
 
     @JsonProperty(value = "registrationDateTime")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss")
-    private Date registrationDateTime;
+    private String registrationDateTime;
 
     @JsonProperty(value = "estimatedReleaseDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date estimatedReleaseDate;
+    private LocalDate estimatedReleaseDate;
 
     @JsonProperty(value = "caseNumber")
     private String caseNumber;
@@ -36,26 +33,35 @@ public class VehicleUpdatePayload {
     @JsonProperty(value = "chassisNumber")
     private String chassisNumber;
 
+    @JsonProperty(value = "emirate")
+    private String emirate;
+
+    @JsonProperty(value = "category")
+    private String category;
+
+    @JsonProperty(value = "code")
+    private String code;
+
     @JsonProperty(value = "color")
     private String color;
 
     @JsonProperty(value = "parkingSlot")
     private String parkingSlot;
 
-    @JsonProperty(value = "isCaseInCourt")
-    private Boolean isCaseInCourt;
-
-    @JsonProperty(value = "isCarToBeAuctioned")
-    private Boolean isCarToBeAuctioned;
+    @JsonProperty(value = "isWanted")
+    private Boolean isWanted;
 
     @JsonProperty(value = "numberPlate")
     private String numberPlate;
 
     @JsonProperty(value = "owner")
-    private OwnerEntity owner;
+    private OwnerPayload owner;
 
     @JsonProperty(value = "release")
     private ReleaseIdentityPayload releaseIdentity;
+
+    @JsonProperty(value = "remarks")
+    private String remarks;
 
     @JsonProperty(value = "department")
     private String department;

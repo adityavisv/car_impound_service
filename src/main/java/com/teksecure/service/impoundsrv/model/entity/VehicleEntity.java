@@ -10,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -20,13 +22,17 @@ public class VehicleEntity {
     public VehicleEntity(VehicleCreatePayload payload) throws IOException {
         this.make = payload.getMake();
         this.model = payload.getModel();
-        this.type = payload.getType().toValue();
+        this.type = payload.getType();
         this.isWanted = payload.getIsWanted();
         this.category = payload.getCategory();
-        this.emirate = payload.getEmirate().toValue();
+        this.emirate = payload.getEmirate();
         this.code = payload.getCode();
-        this.registrationDateTime = payload.getRegistrationDateTime();
         this.estimatedReleaseDate = payload.getEstimatedReleaseDate();
+//
+//        ZoneId zoneId = ZoneId.of("Asia/Dubai");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.registrationDateTime = LocalDateTime.parse(payload.getRegistrationDateTime(), formatter);
+
         this.caseNumber = payload.getCaseNumber();
         this.chassisNumber = payload.getChassisNumber();
         this.color = payload.getColor();
@@ -53,10 +59,10 @@ public class VehicleEntity {
     private String type;
 
     @Column(name = "REG_DT_TIME")
-    private Date registrationDateTime;
+    private LocalDateTime registrationDateTime;
 
     @Column(name = "RELEASE_DT")
-    private Date estimatedReleaseDate;
+    private LocalDate estimatedReleaseDate;
 
     @Column(name = "CASE_NUM")
     private String caseNumber;
@@ -149,24 +155,58 @@ public class VehicleEntity {
         if (payload.getMake() != null) {
             this.make = payload.getMake();
         }
-        if (payload.getModel() != null)
+        if (payload.getModel() != null) {
             this.model = payload.getModel();
-        if (payload.getRegistrationDateTime() != null)
-            this.registrationDateTime = payload.getRegistrationDateTime();
-        if (payload.getCaseNumber() != null)
-            this.caseNumber = payload.getCaseNumber();
-        if (payload.getChassisNumber() != null)
-            this.chassisNumber = payload.getChassisNumber();
-        if (payload.getColor() != null)
-            this.color = payload.getColor();
-        if (payload.getParkingSlot() != null)
-            this.parkingSlot = payload.getParkingSlot();
-        if (payload.getOwner() != null)
-            this.owner = payload.getOwner();
-        if (payload.getReleaseIdentity() != null)
-            this.releaseIdentity = new ReleaseIdentityEntity(payload.getReleaseIdentity());
-        if (payload.getEstimatedReleaseDate() != null)
+        }
+        if (payload.getType() != null) {
+            this.type = payload.getType();
+        }
+        if (payload.getRegistrationDateTime() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            this.registrationDateTime = LocalDateTime.parse(payload.getRegistrationDateTime(), formatter);
+        }
+        if (payload.getEstimatedReleaseDate() != null) {
             this.estimatedReleaseDate = payload.getEstimatedReleaseDate();
+        }
+        if (payload.getCaseNumber() != null) {
+            this.caseNumber = payload.getCaseNumber();
+        }
+        if (payload.getChassisNumber() != null) {
+            this.chassisNumber = payload.getChassisNumber();
+        }
+        if (payload.getEmirate() != null) {
+            this.emirate = payload.getEmirate();
+        }
+        if (payload.getCategory() != null) {
+            this.category = payload.getCategory();
+        }
+        if (payload.getCode() != null) {
+            this.code = payload.getCode();
+        }
+        if (payload.getColor() != null) {
+            this.color = payload.getColor();
+        }
+        if (payload.getIsWanted() != null) {
+            this.isWanted = payload.getIsWanted();
+        }
+        if (payload.getNumberPlate() != null) {
+            this.numberPlate = payload.getNumberPlate();
+        }
+        if (payload.getOwner() != null) {
+            this.owner = new OwnerEntity(payload.getOwner());
+        }
+
+        if (payload.getReleaseIdentity() != null) {
+            this.releaseIdentity = new ReleaseIdentityEntity(payload.getReleaseIdentity());
+        }
+
+        if (payload.getRemarks() != null) {
+            this.remarks = payload.getRemarks();
+        }
+
+        if (payload.getDepartment() != null) {
+            this.department = payload.getDepartment();
+        }
     }
 
     public void updateReleaseDocument(MultipartFile file) {
@@ -177,8 +217,12 @@ public class VehicleEntity {
 
         }
     }
-    public void updateImage(List<MultipartFile> files) {
 
+    public void updateNewImage(List<MultipartFile> files) {
+
+    }
+
+    public void updateImage(List<MultipartFile> files) {
         try {
             switch(files.size()) {
                 case 5:
@@ -199,7 +243,7 @@ public class VehicleEntity {
                     break;
             }
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
     }
 }

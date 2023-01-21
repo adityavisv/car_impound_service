@@ -114,4 +114,21 @@ public class VehicleController {
         }
         return new ResponseEntity<>(response, response.getStatusCode() == 201 ? HttpStatus.CREATED : HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+    @RequestMapping(method = RequestMethod.PUT, path="/update")
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateVehicle(@RequestParam("vehicleId") String vehicleId,
+                                                                @RequestBody VehicleUpdatePayload updatePayload) {
+        Integer vehicleIdInt = Integer.parseInt(vehicleId);
+        VehicleEntity updatedVehicle = service.updateVehicle(vehicleIdInt, updatePayload);
+        if (updatedVehicle != null) {
+            return new ResponseEntity<VehicleResponsePayload>(new VehicleResponsePayload(updatedVehicle), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<GenericResponse>(new GenericResponse("Error", 404), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }

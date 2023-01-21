@@ -27,9 +27,12 @@ public class ReleaseIdentityPayload {
     @JsonProperty(value = "contactNumber", required = true)
     private String contactNumber;
 
-    @JsonProperty(value = "emailAddress")
+    @JsonProperty(value = "emailAddress", required = true)
     private String emailAddress;
 
     @JsonProperty(value = "nationality", required = true)
     private String nationality;
+
+    @JsonProperty(value = "releaseDocumentNumber", required = false)
+    private String releaseDocumentNumber;
 }

@@ -13,5 +13,6 @@ public class ErrorHandler {
     public void handleIllegalArgument(Exception ex) {
         System.out.println("HTTP REQUEST 400");
         System.out.println(ex.getMessage());
+        ex.printStackTrace();
     }
 }

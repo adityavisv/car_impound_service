@@ -3,10 +3,7 @@ package com.teksecure.service.impoundsrv.controller;
 import com.teksecure.service.impoundsrv.model.entity.ParkingSpotEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.ReleaseIdentityPayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
-import com.teksecure.service.impoundsrv.model.payload.response.ParkingSpotListPayload;
-import com.teksecure.service.impoundsrv.model.payload.response.ParkingZoneListSummary;
-import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
-import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.*;
 import com.teksecure.service.impoundsrv.service.ParkingZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,11 +89,19 @@ public class ZoneController {
 
     @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
     @GetMapping(value="/upcomingreleases")
-    public ResponseEntity<VehicleListPayload> getUpcomingReleases() {
+    public ResponseEntity<UpcomingReleaseResponse> getUpcomingReleases() {
 
-        VehicleListPayload upcomingReleaseVehicles = service.getUpcomingReleases();
+        UpcomingReleaseResponse upcomingReleaseVehicles = service.getUpcomingReleases();
         return new ResponseEntity<>(upcomingReleaseVehicles, HttpStatus.OK);
 
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/reassign")
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
+    public ResponseEntity<?> reassignVehicle(@RequestParam("vehicleId") Integer vehicleId,
+                                             @RequestParam("zoneLabel") String zoneLabel,
+                                             @RequestParam("slotNumber") List<Integer> slotNumbers) {
+        return new ResponseEntity<>(service.reassignVehicle(vehicleId, zoneLabel, slotNumbers), HttpStatus.OK);
     }
 
 }
