@@ -96,21 +96,157 @@ paths:
           description: Invalid vehicle ID
         '404':
           description: Vehicle not found
-  /api/v1/search:
+  /api/v1/zone:
+    get:
+      tags:
+        - zone
+      summary: Retrieves all parking slots in a zone
+      operationId: retrieveZone
+      parameters:
+        - name: zone
+          in: query
+          description: Label of the zone to retrieve
+          required: false
+          schema:
+            type: string
+            default: 'A'
+        - name: occupiedStatus
+          in: query
+          description: Occupancy Status of parking spots to filter by
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpotList'
+        '400':
+          description: Invalid Zone Label
+  /api/v1/zone/parkingSpot:
+    get:
+      tags:
+        - vehicle
+      summary: Retrieves single parking spot details
+      description: Fetches all information about a parking spot based on zone and slot number
+      parameters:
+        - name: zone
+          in: query
+          description: Zone of the parking spot to look up
+          required: true
+          schema:
+            type: string
+        - name: slotNumber
+          in: query
+          description: Slot Number of the parking spot to look up.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpot'
+  /api/v1/zone/summary:
+    get:
+      tags:
+        - vehicle
+      summary: Retrieves summaries of zone(s) based on filters (if applicable)
+      parameters:
+        - name: zone
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingZoneListSummary'
+  /api/v1/zone/assign:
+    put:
+      tags:
+        - vehicle
+      summary: Assigns a car to a parking slot
+      parameters:
+        - name: zone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: slotNumber
+          in: query
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Vehicle Data which is to be assigned
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehiclePost'
+        required: true
+  /api/v1/zone/release:
+    put:
+      tags:
+        - vehicle
+      summary: Releases car from a given parking spot
+      parameters:
+        - name: zone
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: slotNumber
+          in: query
+          required: true
+          schema:
+            type: integer
+
+  /api/v1/vehicle/search:
     get:
       tags:
         - vehicle
       summary: Search vehicle from impound lot database
-      description: Searches all vehicle data throught the database based on a search keyword.
+      description: Searches all vehicle data through the database based on parameters.
       operationId: searchVehicle
       parameters:
-        - name: keyword
+        - name: make
           in: query
-          description: Key phrase to search by
-          required: true
+          description: Make of the vehicle
+          required: false
           schema:
             type: string
-            default: available
+        - name: model
+          in: query
+          description: Model of the vehicle
+          required: false
+          schema:
+            type: string
+        - name: zone
+          in: query
+          description: Zone to search by
+          required: false
+          schema:
+            type: string
+        - name: ownerFirstName
+          in: query
+          description: First name of the owner to search by.
+          required: false
+          schema:
+            type: string
+        - name: ownerLastName
+          in: query
+          description: Last name of the owner to search by.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation
@@ -123,6 +259,47 @@ paths:
 
 components:
   schemas:
+    ParkingZoneSummary:
+      type: object
+      properties:
+        zoneLabel:
+          type: string
+        totalCapacity:
+          type: integer
+        availableCount:
+          type: integer
+        occupiedCount:
+          type: integer
+    ParkingZoneListSummary:
+      type: object
+      properties:
+        zoneSummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParkingZoneSummary'
+    ParkingSpot:
+      type: object
+      properties:
+        id:
+          type: integer
+        zoneLabel:
+          type: string
+        slotNumber:
+          type: integer
+        occupancyStatus:
+          type: string
+          enum: ["Occupied", "Available"]
+        occupiedVehicle:
+          $ref: '#/components/schemas/ParkingSpot'
+
+    ParkingSpotList:
+      type: object
+      properties:
+        parkingSpots:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParkingSpot'
+
     Vehicles:
       type: object
       properties:
@@ -130,6 +307,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vehicle'
+
     Owner:
       type: object
       properties:
