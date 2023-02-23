@@ -14,7 +14,10 @@ RUN mkdir /opt/tomcat/
 WORKDIR /opt/tomcat/
 RUN curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.71/bin/apache-tomcat-9.0.71.tar.gz
 RUN tar xzvf apache*.tar.gz
-RUN wget https://raw.githubusercontent.com/adityavisv/car_impound_scripts/main/server.xml -P apache-tomcat-9.0.71/conf/
+RUN curl -O https://raw.githubusercontent.com/adityavisv/car_impound_scripts/main/server.xml
+RUN mv server.xml apache-tomcat-9.0.71/conf/
+RUN echo "set JAVA_OPTS=-Xms4096m -Xmx2048m;" > apache-tomcat-9.0.71/bin/setenv.sh
+RUN chmod +x apache-tomcat-9.0.71/bin/setenv.sh
 RUN mv apache-tomcat-9.0.71/* /opt/tomcat/.
 
 
