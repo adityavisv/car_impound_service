@@ -230,7 +230,7 @@ public class VehicleEntity {
                     this.imageType5 = files.get(4).getContentType();
                 case 4:
                     this.image4 = files.get(3).getBytes();
-                    this.imageType4 = files.get(4).getContentType();
+                    this.imageType4 = files.get(3).getContentType();
                 case 3:
                     this.image3 = files.get(2).getBytes();
                     this.imageType3 = files.get(2).getContentType();
