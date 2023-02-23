@@ -50,6 +50,7 @@ RUN curl -O https://raw.githubusercontent.com/adityavisv/car_impound_scripts/mai
 RUN mv server.xml apache-tomcat-9.0.71/conf/
 RUN echo "set JAVA_OPTS=-Xms4096m -Xmx2048m;" > apache-tomcat-9.0.71/bin/setenv.sh
 RUN chmod +x apache-tomcat-9.0.71/bin/setenv.sh
+RUN chmod +x apache-tomcat-9.0.71/bin/startup.sh
 RUN mv apache-tomcat-9.0.71/* /opt/tomcat/.
 
 RUN mkdir /opt/build/
@@ -61,4 +62,4 @@ RUN mvn clean package -DskipTests
 WORKDIR /opt/tomcat/webapps
 RUN mv /opt/build/car_impound_service/target/impoundsrv-0.0.1-SNAPSHOT.war .
 EXPOSE 8080
-CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+CMD ["/opt/tomcat/bin/startup.sh"]
