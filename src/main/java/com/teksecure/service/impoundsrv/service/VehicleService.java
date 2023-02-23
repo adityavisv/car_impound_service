@@ -110,15 +110,30 @@ public class VehicleService  {
             allVehicles = allVehicles.stream()
                     .filter(v -> (v.getNumberPlate() != null & v.getNumberPlate().contains(criteria.getNumberPlate())))
                     .collect(Collectors.toList());
-        if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
-            LocalDate startDate = criteria.getStartDate();
-            LocalDate endDate = criteria.getEndDate();
-            allVehicles = allVehicles.stream()
-                    .filter(v -> (
-                            (v.getRegistrationDateTime().toLocalDate().isAfter(startDate) || v.getRegistrationDateTime().toLocalDate().isEqual(startDate)) &&
-                                    (v.getRegistrationDateTime().toLocalDate().isEqual(endDate) || v.getRegistrationDateTime().toLocalDate().isBefore(endDate))))
-                    .collect(Collectors.toList());
+        if (criteria.getStatusAction() != null) {
+            if (criteria.getStartDate() != null && criteria.getEndDate() != null) {
+                LocalDate startDate = criteria.getStartDate();
+                LocalDate endDate = criteria.getEndDate();
+                if (criteria.getStatusAction().equals(VehicleStatus.REGISTERED.toValue())) {
+                    allVehicles = allVehicles.stream()
+                            .filter(v -> (
+                                    (v.getRegistrationDateTime().toLocalDate().isAfter(startDate) || v.getRegistrationDateTime().toLocalDate().isEqual(startDate)) &&
+                                            (v.getRegistrationDateTime().toLocalDate().isEqual(endDate) || v.getRegistrationDateTime().toLocalDate().isBefore(endDate))))
+                            .collect(Collectors.toList());
+                }
+                else if (criteria.getStatusAction().equals(VehicleStatus.APPROVED_FOR_RELEASE.toValue())) {
+                    allVehicles = allVehicles.stream()
+                            .filter(v -> (
+                                    (v.getReleaseIdentity().getReleaseDateTime().toLocalDate().isAfter(startDate)
+                                            || v.getReleaseIdentity().getReleaseDateTime().toLocalDate().isEqual(startDate))
+                                            && (v.getReleaseIdentity().getReleaseDateTime().toLocalDate().isEqual(endDate)
+                                            || v.getReleaseIdentity().getReleaseDateTime().toLocalDate().isBefore(endDate))))
+                            .collect(Collectors.toList());
+                }
+
+            }
         }
+
         if (criteria.getOwnerFirstname() != null)
             allVehicles = allVehicles.stream()
                     .filter(v -> (v.getOwner() != null && v.getOwner().getFirstName() != null && v.getOwner().getFirstName().contains(criteria.getOwnerFirstname())))

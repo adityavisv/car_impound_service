@@ -40,4 +40,5 @@ public class SearchCriteria {
     private String remarksKeyword;
     private String zoneLabel;
     private String status;
+    private String statusAction;
 }
