@@ -31,7 +31,7 @@
 #EXPOSE 8080
 #CMD ["/opt/tomcat/bin/catalina.sh", "run"]
 
-# Start from a base alpine image
+# Start from a base alpine imageEntity
 FROM openjdk:8-alpine
 
 # install ssh-agent, git, docker, maven
@@ -39,7 +39,8 @@ RUN apk add --no-cache \
     git \
     maven \
     bash \
-    curl wget
+    curl \
+    tar
 
 
 RUN mkdir /opt/tomcat/

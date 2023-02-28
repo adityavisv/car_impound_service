@@ -12,6 +12,7 @@ public interface VehicleRepository extends CrudRepository<VehicleEntity, Integer
     @Query(value = "select * from vehicles v", nativeQuery = true)
     List<VehicleEntity> fetchAllVehicles();
 
+
     @Query(value = "select * from vehicles v where v.PARKING_SLOT like ':zone%'", nativeQuery = true)
     List<VehicleEntity> fetchAllVehiclesByZone();
 

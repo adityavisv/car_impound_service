@@ -1,12 +1,18 @@
 package com.teksecure.service.impoundsrv.service;
 
+import com.teksecure.service.impoundsrv.model.entity.ImageEntity;
+import com.teksecure.service.impoundsrv.model.entity.ReleaseDocumentEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.SearchCriteria;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.ImageListPayload;
+import com.teksecure.service.impoundsrv.model.payload.response.ReleaseDocumentPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
 import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
 import com.teksecure.service.impoundsrv.model.type.VehicleStatus;
+import com.teksecure.service.impoundsrv.repository.ImageRepository;
+import com.teksecure.service.impoundsrv.repository.ReleaseDocumentRepository;
 import com.teksecure.service.impoundsrv.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +28,17 @@ import java.util.stream.Collectors;
 @Service
 public class VehicleService  {
 
+    private ReleaseDocumentRepository releaseDocumentRepository;
+
     private VehicleRepository repository;
 
+    private ImageRepository imageRepository;
+
     @Autowired
-    public VehicleService(VehicleRepository vehicleRepository) {
+    public VehicleService(VehicleRepository vehicleRepository, ImageRepository imageRepository, ReleaseDocumentRepository releaseDocumentRepository) {
         this.repository = vehicleRepository;
+        this.imageRepository = imageRepository;
+        this.releaseDocumentRepository = releaseDocumentRepository;
     }
 
     public VehicleEntity retrieveVehicle(String vehicleId) {
@@ -57,22 +69,21 @@ public class VehicleService  {
         }
     }
 
-    public VehicleEntity assignVehicleImage(Integer vehicleId, List<MultipartFile> files) {
-        VehicleEntity matchVehicle = repository.findById(vehicleId).orElse(null);
-        if (matchVehicle != null) {
-            matchVehicle.updateImage(files);
-            return repository.save(matchVehicle);
+    public List<ImageEntity> assignVehicleImage(Integer vehicleId, List<MultipartFile> files) {
+        List<ImageEntity> savedEntities = new ArrayList<>();
+        for (MultipartFile file : files) {
+            ImageEntity imageEntity = new ImageEntity(file, vehicleId);
+            imageRepository.save(imageEntity);
+            savedEntities.add(imageEntity);
         }
-        else {
-            return null;
-        }
+        return savedEntities;
     }
 
-    public VehicleEntity assignReleaseDocument(Integer vehicleId, MultipartFile file) {
-        VehicleEntity matchVehicle = repository.findById(vehicleId).orElse(null);
-        if (matchVehicle != null) {
-            matchVehicle.updateReleaseDocument(file);
-            return repository.save(matchVehicle);
+    public ReleaseDocumentEntity assignReleaseDocument(Integer vehicleId, MultipartFile file) {
+        ReleaseDocumentEntity newReleaseDocEntity = new ReleaseDocumentEntity(file, vehicleId);
+        newReleaseDocEntity = releaseDocumentRepository.save(newReleaseDocEntity);
+        if (newReleaseDocEntity != null) {
+            return newReleaseDocEntity;
         } else {
             return null;
         }
@@ -122,6 +133,9 @@ public class VehicleService  {
                             .collect(Collectors.toList());
                 }
                 else if (criteria.getStatusAction().equals(VehicleStatus.APPROVED_FOR_RELEASE.toValue())) {
+                    allVehicles = allVehicles.stream()
+                            .filter(v -> v.getReleaseIdentity() != null)
+                            .collect(Collectors.toList());
                     allVehicles = allVehicles.stream()
                             .filter(v -> (
                                     (v.getReleaseIdentity().getReleaseDateTime().toLocalDate().isAfter(startDate)
@@ -229,6 +243,19 @@ public class VehicleService  {
             return new VehicleResponsePayload(entity);
         }
         return null;
+    }
+
+    public ImageListPayload fetchAllImagesOfVehicle(Integer vehicleId) {
+        List<ImageEntity> allImagesOfVehicle = imageRepository.fetchAllImagesByVehicleId(vehicleId);
+        return new ImageListPayload(allImagesOfVehicle);
+    }
+
+    public ReleaseDocumentPayload fetchReleaseDocByVehicle(Integer vehicleId) {
+        List<ReleaseDocumentEntity> releaseDocEntities = releaseDocumentRepository.fetchReleaseDocByVehicleId(vehicleId);
+        if (releaseDocEntities != null && releaseDocEntities.size() > 0)
+            return new ReleaseDocumentPayload(releaseDocEntities.get(0));
+        else
+            return null;
     }
 
 }

@@ -18,8 +18,8 @@ import java.util.List;
 @Entity
 @Table(name="vehicles")
 @Getter @Setter @NoArgsConstructor
-public class VehicleEntity {
-    public VehicleEntity(VehicleCreatePayload payload) throws IOException {
+public class VehicleEntityNoImage {
+    public VehicleEntityNoImage(VehicleCreatePayload payload) throws IOException {
         this.make = payload.getMake();
         this.model = payload.getModel();
         this.type = payload.getType();
@@ -28,7 +28,8 @@ public class VehicleEntity {
         this.emirate = payload.getEmirate();
         this.code = payload.getCode();
         this.estimatedReleaseDate = payload.getEstimatedReleaseDate();
-
+//
+//        ZoneId zoneId = ZoneId.of("Asia/Dubai");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.registrationDateTime = LocalDateTime.parse(payload.getRegistrationDateTime(), formatter);
 
@@ -100,6 +101,13 @@ public class VehicleEntity {
     @Column(name = "IS_WANTED")
     private Boolean isWanted;
 
+    @Column(name = "RELEASE_DOCUMENT")
+    @Lob
+    private byte[] releaseDocument;
+
+    @Column(name = "RELEASE_DOCUMENT_TYPE")
+    private String releaseDocumentType;
+
     @Column(name = "REMARKS")
     private String remarks;
 
@@ -162,6 +170,15 @@ public class VehicleEntity {
 
         if (payload.getDepartment() != null) {
             this.department = payload.getDepartment();
+        }
+    }
+
+    public void updateReleaseDocument(MultipartFile file) {
+        try {
+            this.releaseDocument = file.getBytes();
+            this.releaseDocumentType = file.getContentType();
+        } catch (IOException ex) {
+
         }
     }
 }

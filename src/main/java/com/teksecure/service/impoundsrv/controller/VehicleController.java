@@ -1,12 +1,12 @@
 package com.teksecure.service.impoundsrv.controller;
 
+import com.teksecure.service.impoundsrv.model.entity.ImageEntity;
+import com.teksecure.service.impoundsrv.model.entity.ReleaseDocumentEntity;
 import com.teksecure.service.impoundsrv.model.entity.VehicleEntity;
 import com.teksecure.service.impoundsrv.model.payload.request.SearchCriteria;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleCreatePayload;
 import com.teksecure.service.impoundsrv.model.payload.request.VehicleUpdatePayload;
-import com.teksecure.service.impoundsrv.model.payload.response.GenericResponse;
-import com.teksecure.service.impoundsrv.model.payload.response.VehicleListPayload;
-import com.teksecure.service.impoundsrv.model.payload.response.VehicleResponsePayload;
+import com.teksecure.service.impoundsrv.model.payload.response.*;
 import com.teksecure.service.impoundsrv.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,9 +87,9 @@ public class VehicleController {
     public ResponseEntity<GenericResponse> assignReleaseDocument(@RequestParam("vehicleId") String vehicleId,
                                                                  @RequestParam("file") MultipartFile file) {
         Integer vehicleIdInt = Integer.parseInt(vehicleId);
-        VehicleEntity updatedVehicle = service.assignReleaseDocument(vehicleIdInt, file);
+        ReleaseDocumentEntity releaseDocument = service.assignReleaseDocument(vehicleIdInt, file);
         GenericResponse response;
-        if (updatedVehicle != null) {
+        if (releaseDocument != null) {
             response = new GenericResponse("Release document uploaded", 201);
         }
         else {
@@ -104,9 +104,9 @@ public class VehicleController {
                                                                 @RequestParam("file") List<MultipartFile> files
                                                                 ) {
         Integer vehicleIdInt = Integer.parseInt(vehicleId);
-        VehicleEntity updatedVehicle = service.assignVehicleImage(vehicleIdInt, files);
+        List<ImageEntity> savedEntities = service.assignVehicleImage(vehicleIdInt, files);
         GenericResponse response;
-        if (updatedVehicle != null) {
+        if (savedEntities != null && !savedEntities.isEmpty()) {
             response = new GenericResponse("Image uploaded", 201);
         }
         else {
@@ -126,6 +126,30 @@ public class VehicleController {
             return new ResponseEntity<VehicleResponsePayload>(new VehicleResponsePayload(updatedVehicle), HttpStatus.OK);
         }
         else {
+            return new ResponseEntity<GenericResponse>(new GenericResponse("Error", 404), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path="/fetchimages")
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
+    public ResponseEntity<?> fetchImagesOfVehicle(@RequestParam("vehicleId") String vehicleId) {
+        Integer vehicleIdInt = Integer.parseInt(vehicleId);
+        ImageListPayload imageListPayload = service.fetchAllImagesOfVehicle(vehicleIdInt);
+        if (imageListPayload != null) {
+            return new ResponseEntity<ImageListPayload>(imageListPayload, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<GenericResponse>(new GenericResponse("Error", 404), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/fetchreleasedoc")
+    @PreAuthorize("hasRole('SUPERUSER') or hasRole('ADMIN')")
+    public ResponseEntity<?> fetchReleaseDocOfVehicle(@RequestParam("vehicleId") String vehicleId) {
+        Integer vehicleIdInt = Integer.parseInt(vehicleId);
+        ReleaseDocumentPayload payload = service.fetchReleaseDocByVehicle(vehicleIdInt);
+        if (payload != null) {
+            return new ResponseEntity<ReleaseDocumentPayload>(payload, HttpStatus.OK);
+        } else {
             return new ResponseEntity<GenericResponse>(new GenericResponse("Error", 404), HttpStatus.NOT_FOUND);
         }
     }
